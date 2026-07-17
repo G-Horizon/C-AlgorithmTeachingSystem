@@ -1,0 +1,13 @@
+FONT = "Microsoft YaHei"
+MONO_FONT = "Consolas"
+
+BACKGROUND = "#0f172a"
+CELL_FILL = "#1e293b"
+CELL_STROKE = "#64748b"
+COMPARE_FILL = "#eab308"
+SWAP_FILL = "#f97316"
+SORTED_FILL = "#16a34a"
+POINTER_BLUE = "#38bdf8"
+POINTER_PINK = "#fb7185"
+MUTED = "#cbd5e1"
+
