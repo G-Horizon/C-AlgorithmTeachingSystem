@@ -10,6 +10,10 @@ import {
   Repeat2,
   SortAsc,
 } from "lucide-react";
+import { greedyLessons } from "./greedy";
+import { divideConquerLessons } from "./divideConquer";
+import { dynamicProgrammingLessons } from "./dynamicProgramming";
+import { bfsLessons } from "./bfs";
 
 export type Problem = {
   id: string;
@@ -970,6 +974,509 @@ int main() {
     }
 
     cout << f[1][1];
+    return 0;
+}`;
+
+const recursionSelfCallCode = `#include <iostream>
+using namespace std;
+
+void countdown(int n) {
+    // 出口：最小任务已经处理完
+    if (n == 0) return;
+
+    cout << n;
+    if (n > 1) cout << ' ';
+
+    // 把规模更小的任务交给下一层
+    countdown(n - 1);
+}
+
+int main() {
+    int n;
+    cin >> n;
+    countdown(n);
+    return 0;
+}`;
+
+const recursionBaseCaseCode = `#include <iostream>
+using namespace std;
+
+void printUp(int n) {
+    if (n == 0) return; // 出口必须先判断
+    printUp(n - 1);
+    if (n > 1) cout << ' ';
+    cout << n;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    printUp(n);
+    return 0;
+}`;
+
+const recursionParameterCode = `#include <iostream>
+using namespace std;
+
+void printRange(int current, int right) {
+    if (current > right) return;
+    cout << current;
+    if (current < right) cout << ' ';
+    printRange(current + 1, right);
+}
+
+int main() {
+    int left, right;
+    cin >> left >> right;
+    printRange(left, right);
+    return 0;
+}`;
+
+const recursionCallStackCode = `#include <iostream>
+using namespace std;
+
+long long recursiveSum(int n) {
+    if (n == 1) return 1;
+    long long child = recursiveSum(n - 1);
+    return n + child;
+}
+
+int main() {
+    int n;
+    cin >> n;
+    cout << recursiveSum(n);
+    return 0;
+}`;
+
+const recursionFactorialCode = `#include <iostream>
+using namespace std;
+
+long long factorial(int n) {
+    if (n <= 1) return 1;
+    return 1LL * n * factorial(n - 1);
+}
+
+int main() {
+    int n;
+    cin >> n;
+    cout << factorial(n);
+    return 0;
+}`;
+
+const recursionFibonacciCode = `#include <iostream>
+using namespace std;
+
+long long fibonacci(int n) {
+    if (n <= 1) return n;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+int main() {
+    int n;
+    cin >> n;
+    cout << fibonacci(n);
+    return 0;
+}`;
+
+const recursionHanoiCode = `#include <iostream>
+using namespace std;
+
+void hanoi(int n, char from, char auxiliary, char to) {
+    if (n == 0) return;
+    hanoi(n - 1, from, to, auxiliary);
+    cout << from << "->" << to << '\\n';
+    hanoi(n - 1, auxiliary, from, to);
+}
+
+int main() {
+    int n;
+    cin >> n;
+    hanoi(n, 'A', 'B', 'C');
+    return 0;
+}`;
+
+const recursionTreeTraversalCode = `#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<int> tree;
+
+void preorder(int index) {
+    if (index >= (int)tree.size() || tree[index] == 0) return;
+    cout << tree[index] << ' ';
+    preorder(index * 2);
+    preorder(index * 2 + 1);
+}
+
+int main() {
+    int n;
+    cin >> n;
+    tree.resize(n + 1);
+    for (int i = 1; i <= n; i++) cin >> tree[i];
+    preorder(1);
+    return 0;
+}`;
+
+const recursionDebugCode = `#include <iostream>
+#include <string>
+using namespace std;
+
+void trace(int n, int depth) {
+    string indent(depth, '-');
+    cout << indent << "enter " << n << '\\n';
+    if (n > 1) trace(n - 1, depth + 1);
+    cout << indent << "leave " << n << '\\n';
+}
+
+int main() {
+    int n;
+    cin >> n;
+    trace(n, 0);
+    return 0;
+}`;
+
+const searchBinaryTreeCode = `#include <iostream>
+#include <string>
+using namespace std;
+
+int n;
+string path;
+
+void dfs(int pos) {
+    if (pos == n) {
+        cout << path << '\\n';
+        return;
+    }
+
+    path.push_back('0');
+    dfs(pos + 1);
+    path.pop_back();
+
+    path.push_back('1');
+    dfs(pos + 1);
+    path.pop_back();
+}
+
+int main() {
+    cin >> n;
+    dfs(0);
+    return 0;
+}`;
+
+const recurrenceInitialBoundaryCode = `#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+
+    // 数组要覆盖 f[0] 到 f[n]，并给小规模输入留出 f[1]
+    vector<long long> f(n + 2, 0);
+
+    // 先把最小状态变成已知
+    f[0] = 1;
+    f[1] = 1;
+
+    // f[i] 依赖 i - 1 和 i - 2，所以从 i = 2 开始
+    for (int i = 2; i <= n; i++) {
+        f[i] = f[i - 1] + f[i - 2];
+    }
+
+    cout << f[n];
+    return 0;
+}`;
+
+const searchDfsFrameworkCode = `#include <iostream>
+#include <vector>
+using namespace std;
+
+int n, m;
+vector<int> path;
+
+void dfs(int pos) {
+    if (pos == n) {
+        for (int i = 0; i < n; i++) {
+            if (i) cout << ' ';
+            cout << path[i];
+        }
+        cout << '\\n';
+        return;
+    }
+
+    for (int choice = 1; choice <= m; choice++) {
+        path.push_back(choice);
+        dfs(pos + 1);
+        path.pop_back();
+    }
+}
+
+int main() {
+    cin >> n >> m;
+    dfs(0);
+    return 0;
+}`;
+
+const searchChooseUndoCode = `#include <iostream>
+#include <string>
+using namespace std;
+
+int n, k;
+string path;
+
+void dfs(int pos, int ones) {
+    if (ones > k || ones + (n - pos) < k) return;
+    if (pos == n) {
+        cout << path << '\\n';
+        return;
+    }
+
+    path.push_back('0');
+    dfs(pos + 1, ones);
+    path.pop_back();
+
+    path.push_back('1');
+    dfs(pos + 1, ones + 1);
+    path.pop_back();
+}
+
+int main() {
+    cin >> n >> k;
+    dfs(0, 0);
+    return 0;
+}`;
+
+const searchPermutationCode = `#include <iostream>
+#include <vector>
+using namespace std;
+
+int n;
+vector<int> path;
+vector<bool> used;
+
+void dfs() {
+    if ((int)path.size() == n) {
+        for (int i = 0; i < n; i++) {
+            if (i) cout << ' ';
+            cout << path[i];
+        }
+        cout << '\\n';
+        return;
+    }
+
+    for (int value = 1; value <= n; value++) {
+        if (used[value]) continue;
+        used[value] = true;
+        path.push_back(value);
+        dfs();
+        path.pop_back();
+        used[value] = false;
+    }
+}
+
+int main() {
+    cin >> n;
+    used.assign(n + 1, false);
+    dfs();
+    return 0;
+}`;
+
+const searchCombinationCode = `#include <iostream>
+#include <vector>
+using namespace std;
+
+int n, k;
+vector<int> path;
+
+void dfs(int start) {
+    if ((int)path.size() == k) {
+        for (int i = 0; i < k; i++) {
+            if (i) cout << ' ';
+            cout << path[i];
+        }
+        cout << '\\n';
+        return;
+    }
+
+    int need = k - (int)path.size();
+    for (int value = start; value <= n - need + 1; value++) {
+        path.push_back(value);
+        dfs(value + 1);
+        path.pop_back();
+    }
+}
+
+int main() {
+    cin >> n >> k;
+    dfs(1);
+    return 0;
+}`;
+
+const searchSubsetCode = `#include <iostream>
+#include <vector>
+using namespace std;
+
+int n;
+vector<int> path;
+
+void dfs(int value) {
+    if (value == n + 1) {
+        if (path.empty()) {
+            cout << "{}";
+        } else {
+            for (int i = 0; i < (int)path.size(); i++) {
+                if (i) cout << ' ';
+                cout << path[i];
+            }
+        }
+        cout << '\\n';
+        return;
+    }
+
+    dfs(value + 1);
+    path.push_back(value);
+    dfs(value + 1);
+    path.pop_back();
+}
+
+int main() {
+    cin >> n;
+    dfs(1);
+    return 0;
+}`;
+
+const searchMazeCode = `#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+int n, m;
+vector<string> grid;
+vector<vector<bool>> visited;
+int dx[4] = {1, 0, -1, 0};
+int dy[4] = {0, 1, 0, -1};
+
+bool dfs(int x, int y) {
+    if (x == n - 1 && y == m - 1) return true;
+    visited[x][y] = true;
+
+    for (int dir = 0; dir < 4; dir++) {
+        int nx = x + dx[dir];
+        int ny = y + dy[dir];
+        if (nx < 0 || nx >= n || ny < 0 || ny >= m) continue;
+        if (grid[nx][ny] == '#' || visited[nx][ny]) continue;
+        if (dfs(nx, ny)) return true;
+    }
+    return false;
+}
+
+int main() {
+    cin >> n >> m;
+    grid.resize(n);
+    for (string& row : grid) cin >> row;
+    visited.assign(n, vector<bool>(m, false));
+
+    if (grid[0][0] == '#' || grid[n - 1][m - 1] == '#') {
+        cout << "NO";
+    } else {
+        cout << (dfs(0, 0) ? "YES" : "NO");
+    }
+    return 0;
+}`;
+
+const searchPruningCode = `#include <iostream>
+#include <vector>
+using namespace std;
+
+int n, target;
+long long answer = 0;
+vector<int> numbers;
+vector<int> suffixSum;
+
+void dfs(int index, int sum) {
+    if (sum > target) return;
+    if (sum + suffixSum[index] < target) return;
+    if (index == n) {
+        if (sum == target) answer++;
+        return;
+    }
+
+    dfs(index + 1, sum);
+    dfs(index + 1, sum + numbers[index]);
+}
+
+int main() {
+    cin >> n >> target;
+    numbers.resize(n);
+    suffixSum.assign(n + 1, 0);
+    for (int& value : numbers) cin >> value;
+    for (int i = n - 1; i >= 0; i--) {
+        suffixSum[i] = suffixSum[i + 1] + numbers[i];
+    }
+    dfs(0, 0);
+    cout << answer;
+    return 0;
+}`;
+
+const searchNQueensCode = `#include <iostream>
+#include <vector>
+using namespace std;
+
+int n;
+long long answer = 0;
+vector<bool> columnUsed;
+vector<bool> diagonalDown;
+vector<bool> diagonalUp;
+
+void dfs(int row) {
+    if (row == n) {
+        answer++;
+        return;
+    }
+
+    for (int col = 0; col < n; col++) {
+        int down = row - col + n - 1;
+        int up = row + col;
+        if (columnUsed[col] || diagonalDown[down] || diagonalUp[up]) continue;
+
+        columnUsed[col] = diagonalDown[down] = diagonalUp[up] = true;
+        dfs(row + 1);
+        columnUsed[col] = diagonalDown[down] = diagonalUp[up] = false;
+    }
+}
+
+int main() {
+    cin >> n;
+    columnUsed.assign(n, false);
+    diagonalDown.assign(2 * n - 1, false);
+    diagonalUp.assign(2 * n - 1, false);
+    dfs(0);
+    cout << answer;
+    return 0;
+}`;
+
+const searchComplexityCode = `#include <iostream>
+using namespace std;
+
+int main() {
+    unsigned long long b, d, limit;
+    cin >> b >> d >> limit;
+
+    unsigned long long leaves = 1;
+    bool withinBudget = true;
+    for (unsigned long long level = 0; level < d; level++) {
+        if (b != 0 && leaves > limit / b) {
+            withinBudget = false;
+            break;
+        }
+        leaves *= b;
+        if (leaves > limit) {
+            withinBudget = false;
+            break;
+        }
+    }
+
+    cout << (withinBudget ? "YES" : "NO");
     return 0;
 }`;
 
@@ -1953,7 +2460,7 @@ int main() {
         summary: "从左到右比较相邻元素，必要时交换；每一轮把当前最大值推到右侧。",
         videoUrl: "/videos/bubble_sort_scene/1080p60/BubbleSortVisualization.mp4",
         previewImage: "/previews/bubble_sort_preview.png",
-        duration: "约 3 分钟",
+        duration: "约 37 秒",
         concepts: ["相邻比较", "交换", "已排序区", "提前结束优化", "O(n²)"],
         steps: [
           "先观察每次只比较相邻两个元素。",
@@ -2013,7 +2520,8 @@ int main() {
         title: "选择排序",
         summary: "每一轮从未排序区找出最小值，把它放到当前最左侧的位置，逐步扩张已排序区。",
         videoUrl: "/videos/selection_sort_scene/1080p60/SelectionSortVisualization.mp4",
-        duration: "约 3 分钟",
+        previewImage: "/previews/selection_sort_preview.png",
+        duration: "约 37 秒",
         concepts: ["最小值下标", "未排序区", "选择后交换", "不稳定性", "O(n²)"],
         steps: [
           "把数组分成左侧已排序区和右侧未排序区。",
@@ -2096,7 +2604,8 @@ int main() {
         title: "插入排序",
         summary: "把当前元素当作 key，向左寻找插入位置；比 key 大的元素依次右移，最后把 key 放回空位。",
         videoUrl: "/videos/insertion_sort_scene/1080p60/InsertionSortVisualization.mp4",
-        duration: "约 3 分钟",
+        previewImage: "/previews/insertion_sort_preview.png",
+        duration: "约 32 秒",
         concepts: ["key", "向右移动", "插入位置", "稳定排序", "O(n²)"],
         steps: [
           "左侧区间始终保持有序。",
@@ -2174,7 +2683,8 @@ int main() {
         title: "计数排序",
         summary: "当数值范围不大时，不再反复比较元素；用 count 桶记录每个值出现几次，再按值从小到大展开。",
         videoUrl: "/videos/counting_sort_scene/1080p60/CountingSortVisualization.mp4",
-        duration: "约 3 分钟",
+        previewImage: "/previews/counting_sort_preview.png",
+        duration: "约 28 秒",
         concepts: ["计数桶", "值域 K", "下标映射", "按桶展开", "O(n + K)"],
         steps: [
           "先确认数据可以映射到数组下标，通常从非负整数小范围开始。",
@@ -2259,7 +2769,8 @@ int main() {
         title: "归并排序",
         summary: "把数组递归拆成更小的有序段，再用双指针稳定合并；它是理解分治思想最清晰的一扇门。",
         videoUrl: "/videos/merge_sort_scene/1080p60/MergeSortVisualization.mp4",
-        duration: "约 4 分钟",
+        previewImage: "/previews/merge_sort_preview.png",
+        duration: "约 26 秒",
         concepts: ["分治", "递归拆分", "双指针合并", "稳定排序", "O(n log n)"],
         steps: [
           "先把区间 [left, right] 从中间切开，分别处理左半段和右半段。",
@@ -2353,7 +2864,8 @@ int main() {
         title: "快速排序初步",
         summary: "选择一个基准值 pivot，通过一次分区把数组分成左右两部分，再递归处理；它把“分而治之”变成了非常有动作感的过程。",
         videoUrl: "/videos/quick_sort_scene/1080p60/QuickSortVisualization.mp4",
-        duration: "约 4 分钟",
+        previewImage: "/previews/quick_sort_preview.png",
+        duration: "约 24 秒",
         concepts: ["pivot", "分区", "双指针边界", "递归", "平均 O(n log n)"],
         steps: [
           "选择一个基准值 pivot，入门版本可以先使用当前区间最后一个元素。",
@@ -3097,6 +3609,81 @@ int main() {
           },
         ],
       },
+      {
+        id: "recurrence-initial-conditions-boundary",
+        title: "初始条件与边界",
+        summary: "递推式只是中间规则；程序还必须给出最小状态、合法数组范围和正确循环起点。用极小输入逐项检查，能在长状态链扩散前抓住大多数边界错误。",
+        videoUrl: "/videos/initial_conditions_boundary_scene/480p15/RecurrenceInitialBoundaryVisualization.mp4",
+        previewImage: "/previews/recurrence_initial_boundary_preview.png",
+        duration: "约 24 秒",
+        concepts: ["初始条件", "循环起点", "数组边界", "极小输入", "哨兵初始化", "递推调试"],
+        steps: [
+          "先用一句话定义 f[i]，确认这个定义在 n = 0、n = 1 等最小输入下仍有意义。",
+          "把不需要递推就能直接回答的状态写成初值；爬楼梯可设 f[0] = 1、f[1] = 1。",
+          "检查转移读取哪些旧状态：既然需要 i - 1 和 i - 2，第一个可计算位置就是 i = 2。",
+          "数组容量必须覆盖所有将被读写的下标；用 n + 2 能让 n = 0 时的 f[1] 初始化仍然合法。",
+          "写完后先跑 n = 0、n = 1、n = 2，再检查单行、单列等退化数据。",
+          "二维递推可以使用哨兵初值统一边界，例如 dp[0][1] = 1，让左上角自然得到一种起点方案。",
+        ],
+        code: recurrenceInitialBoundaryCode,
+        problems: [
+          {
+            id: "recurrence-boundary-climb-stairs",
+            title: "边界版爬楼梯",
+            difficulty: "入门",
+            focus: "覆盖 n = 0 和 n = 1，并从第一个未知状态开始递推",
+            status: "ready",
+            starterCode: recurrenceInitialBoundaryCode,
+          },
+          {
+            id: "recurrence-boundary-state-table",
+            title: "补齐递推状态表",
+            difficulty: "基础",
+            focus: "先写两个给定初值，再完整输出 f[0] 到 f[n]",
+            status: "ready",
+            starterCode: `#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    int n;
+    cin >> n;
+
+    vector<long long> f(n + 2, 0);
+
+    // TODO: 写出 f[0]、f[1]，再从第一个未知状态开始递推
+
+    for (int i = 0; i <= n; i++) {
+        if (i > 0) cout << ' ';
+        cout << f[i];
+    }
+    return 0;
+}`,
+          },
+          {
+            id: "recurrence-boundary-grid-sentinel",
+            title: "哨兵边界走方格",
+            difficulty: "进阶",
+            focus: "用 dp[0][1] = 1 统一首行、首列和 1 × 1 网格",
+            status: "ready",
+            starterCode: `#include <iostream>
+#include <vector>
+using namespace std;
+
+int main() {
+    int n, m;
+    cin >> n >> m;
+
+    vector<vector<long long>> dp(n + 1, vector<long long>(m + 1, 0));
+
+    // TODO: 设置一个哨兵初值，让每个格子都能统一从上方和左方累加
+
+    cout << dp[n][m];
+    return 0;
+}`,
+          },
+        ],
+      },
     ],
   },
   {
@@ -3104,54 +3691,1151 @@ int main() {
     order: 4,
     title: "递归算法",
     subtitle: "看见调用栈的展开与回收",
-    status: "planned",
+    status: "ready",
     icon: Braces,
-    lessons: [],
+    lessons: [
+      {
+        id: "recursion-self-call",
+        title: "函数为什么能调用自己",
+        summary: "递归不是让同一个函数停在原地，而是每次创建一份新的调用任务；只要问题规模持续变小，就能一步步走向最小任务。",
+        videoUrl: "/videos/recursion_chapter_scenes/1080p60/RecursionSelfCallVisualization.mp4",
+        previewImage: "/previews/recursion_self_call_preview.png",
+        duration: "约 24 秒",
+        concepts: ["递归", "自调用", "问题规模", "子问题", "调用任务", "递归结构"],
+        steps: [
+          "把 countdown(n) 理解成一张写着参数 n 的独立任务卡。",
+          "函数输出当前 n 后，调用 countdown(n - 1)，把更小任务交给下一层。",
+          "每次调用都会得到自己的参数和局部变量，不会覆盖上一层。",
+          "参数从 n 逐步减到 0，说明任务规模在持续缩小。",
+          "当最小任务能够直接处理时，递归链就可以结束。",
+          "判断能否递归时，先找相似子问题，再确认规模确实变小。",
+        ],
+        code: recursionSelfCallCode,
+        problems: [
+          { id: "recursion-countdown", title: "递归倒计时", difficulty: "入门", focus: "输出当前值后递归处理 n-1", status: "ready", starterCode: recursionSelfCallCode },
+          {
+            id: "recursion-sum-to-n",
+            title: "递归求 1 到 n 的和",
+            difficulty: "基础",
+            focus: "把 sum(n) 拆成 n 与 sum(n-1)",
+            status: "ready",
+            starterCode: `#include <iostream>
+using namespace std;
+
+long long sumTo(int n) {
+    // TODO: 写出最小问题和规模更小的子问题
+}
+
+int main() {
+    int n;
+    cin >> n;
+    cout << sumTo(n);
+    return 0;
+}`,
+          },
+          {
+            id: "recursion-power-two",
+            title: "递归计算 2 的幂",
+            difficulty: "进阶",
+            focus: "用 power(n)=2*power(n-1) 识别同构子问题",
+            status: "ready",
+            starterCode: `#include <iostream>
+using namespace std;
+
+long long powerTwo(int n) {
+    // TODO: 约定 2^0 = 1
+}
+
+int main() {
+    int n;
+    cin >> n;
+    cout << powerTwo(n);
+    return 0;
+}`,
+          },
+        ],
+      },
+      {
+        id: "recursion-base-case",
+        title: "递归出口",
+        summary: "出口负责直接解决最小问题，并阻止继续调用；把出口放在递归调用之前，调用栈才能停止增长并开始返回。",
+        videoUrl: "/videos/recursion_chapter_scenes/1080p60/RecursionBaseCaseVisualization.mp4",
+        previewImage: "/previews/recursion_base_case_preview.png",
+        duration: "约 22 秒",
+        concepts: ["递归出口", "最小问题", "无限递归", "栈溢出", "返回", "边界"],
+        steps: [
+          "先问最小规模是什么，以及它的答案能否直接写出。",
+          "在函数开头判断出口，满足条件时立即 return。",
+          "如果出口缺失，函数会持续创建新栈帧，最终发生栈溢出。",
+          "如果出口永远到不了，写了判断也无法结束递归。",
+          "到达出口后，不再压入新调用，执行方向转为逐层返回。",
+          "用 n=0、n=1 等最小输入单独检查出口是否正确。",
+        ],
+        code: recursionBaseCaseCode,
+        problems: [
+          { id: "recursion-print-up", title: "从 1 递归输出到 n", difficulty: "入门", focus: "先递归后输出，出口设在 n=0", status: "ready", starterCode: recursionBaseCaseCode },
+          {
+            id: "recursion-digit-sum",
+            title: "递归求各位数字和",
+            difficulty: "基础",
+            focus: "n=0 时返回 0，其余情况拆出个位",
+            status: "ready",
+            starterCode: `#include <iostream>
+using namespace std;
+
+int digitSum(long long n) {
+    // TODO: 当前个位是 n % 10，剩余数字是 n / 10
+}
+
+int main() {
+    long long n;
+    cin >> n;
+    cout << digitSum(n);
+    return 0;
+}`,
+          },
+          {
+            id: "recursion-gcd",
+            title: "欧几里得递归求最大公约数",
+            difficulty: "进阶",
+            focus: "b=0 是出口，gcd(a,b) 转为 gcd(b,a%b)",
+            status: "ready",
+            starterCode: `#include <iostream>
+using namespace std;
+
+long long gcdRecursive(long long a, long long b) {
+    // TODO: 当 b 为 0 时直接返回 a
+}
+
+int main() {
+    long long a, b;
+    cin >> a >> b;
+    cout << gcdRecursive(a, b);
+    return 0;
+}`,
+          },
+        ],
+      },
+      {
+        id: "recursion-parameter-change",
+        title: "参数变化",
+        summary: "递归参数是通往出口的路标：每次调用都应让某个度量严格靠近边界，否则调用会在原地打转。",
+        videoUrl: "/videos/recursion_chapter_scenes/1080p60/RecursionParameterVisualization.mp4",
+        previewImage: "/previews/recursion_parameter_preview.png",
+        duration: "约 21 秒",
+        concepts: ["参数变化", "递归进度", "单调靠近", "区间", "下标", "终止性"],
+        steps: [
+          "先为参数找到一个可度量的规模，例如 n 或区间长度 r-l+1。",
+          "当前调用只处理一小步，再把剩余任务交给下一组参数。",
+          "递减写法常见 n-1，递增写法常见 index+1 或 left+1。",
+          "区间递归可以同时收缩左右边界，让长度减少 2。",
+          "若下一层参数完全不变，出口条件就可能永远不成立。",
+          "手动写出前三层参数，是检查递归是否前进的最快方法。",
+        ],
+        code: recursionParameterCode,
+        problems: [
+          { id: "recursion-print-range", title: "递归输出整数区间", difficulty: "入门", focus: "让 current 每层增加 1，直到越过 right", status: "ready", starterCode: recursionParameterCode },
+          {
+            id: "recursion-reverse-string",
+            title: "递归反转字符串",
+            difficulty: "基础",
+            focus: "下标向右推进，回收阶段逆序输出",
+            status: "ready",
+            starterCode: `#include <iostream>
+#include <string>
+using namespace std;
+
+void printReverse(const string& s, int index) {
+    // TODO: index 到达 s.size() 后返回；先递归，再输出当前字符
+}
+
+int main() {
+    string s;
+    cin >> s;
+    printReverse(s, 0);
+    return 0;
+}`,
+          },
+          {
+            id: "recursion-palindrome",
+            title: "递归判断回文串",
+            difficulty: "进阶",
+            focus: "左右边界同时向中间收缩",
+            status: "ready",
+            starterCode: `#include <iostream>
+#include <string>
+using namespace std;
+
+bool isPalindrome(const string& s, int left, int right) {
+    // TODO: 先判断出口和两端字符，再收缩区间
+}
+
+int main() {
+    string s;
+    cin >> s;
+    cout << (isPalindrome(s, 0, (int)s.size() - 1) ? "YES" : "NO");
+    return 0;
+}`,
+          },
+        ],
+      },
+      {
+        id: "recursion-call-stack",
+        title: "调用栈压入与弹出",
+        summary: "每次递归调用都会压入一个保存参数、局部变量和返回位置的栈帧；最深层先返回，结果再沿调用链逐层向上流动。",
+        videoUrl: "/videos/recursion_chapter_scenes/1080p60/RecursionCallStackVisualization.mp4",
+        previewImage: "/previews/recursion_call_stack_preview.png",
+        duration: "约 25 秒",
+        concepts: ["调用栈", "栈帧", "压栈", "弹栈", "局部变量", "返回值"],
+        steps: [
+          "调用 recursiveSum(4) 时，第一张栈帧保存参数 n=4。",
+          "调用 recursiveSum(3) 会压入新栈帧，上一层暂停等待。",
+          "直到 recursiveSum(1) 命中出口，压栈阶段才结束。",
+          "最深层返回 1，上一层取到子结果后计算 2+1。",
+          "栈帧按后进先出顺序弹出，最终回到 main。",
+          "同名局部变量分别属于不同栈帧，互不覆盖。",
+        ],
+        code: recursionCallStackCode,
+        problems: [
+          { id: "recursion-sum-stack", title: "调用栈递归求和", difficulty: "入门", focus: "保存子调用返回值并逐层相加", status: "ready", starterCode: recursionCallStackCode },
+          {
+            id: "recursion-enter-leave",
+            title: "输出进入与返回顺序",
+            difficulty: "基础",
+            focus: "观察 enter 正序、leave 逆序",
+            status: "ready",
+            starterCode: `#include <iostream>
+using namespace std;
+
+void visit(int n) {
+    // TODO: 输出 enter n，递归，再输出 leave n
+}
+
+int main() {
+    int n;
+    cin >> n;
+    visit(n);
+    return 0;
+}`,
+          },
+          {
+            id: "recursion-array-max",
+            title: "递归求数组最大值",
+            difficulty: "进阶",
+            focus: "每层把当前元素与子区间答案比较",
+            status: "ready",
+            starterCode: `#include <algorithm>
+#include <iostream>
+#include <vector>
+using namespace std;
+
+int arrayMax(const vector<int>& a, int index) {
+    // TODO: 最后一项直接返回；否则比较当前项和后缀答案
+}
+
+int main() {
+    int n;
+    cin >> n;
+    vector<int> a(n);
+    for (int& x : a) cin >> x;
+    cout << arrayMax(a, 0);
+    return 0;
+}`,
+          },
+        ],
+      },
+      {
+        id: "recursion-factorial",
+        title: "递归展开与回收：阶乘",
+        summary: "n! 可以拆成 n×(n-1)!：展开阶段保留尚未完成的乘法，出口给出 1，回收阶段再逐层得到完整结果。",
+        videoUrl: "/videos/recursion_chapter_scenes/1080p60/RecursionFactorialVisualization.mp4",
+        previewImage: "/previews/recursion_factorial_preview.png",
+        duration: "约 22 秒",
+        concepts: ["阶乘", "递归展开", "递归回收", "返回表达式", "乘法链", "组合数"],
+        steps: [
+          "根据定义把 n! 改写为 n×(n-1)!。",
+          "每一层先保留当前因子 n，再请求更小阶乘的答案。",
+          "当 n<=1 时直接返回 1，这是乘法链的起点。",
+          "展开顺序是 5、4、3、2、1，回收计算顺序正好相反。",
+          "return n*factorial(n-1) 同时写出了子问题和合并方式。",
+          "用 n=0、n=1 检查 0!=1 和 1!=1 两个边界。",
+        ],
+        code: recursionFactorialCode,
+        problems: [
+          { id: "recursion-factorial-basic", title: "递归求阶乘", difficulty: "入门", focus: "展开 n×factorial(n-1) 并逐层回收", status: "ready", starterCode: recursionFactorialCode },
+          {
+            id: "recursion-factorial-trace",
+            title: "输出阶乘回收过程",
+            difficulty: "基础",
+            focus: "在子调用返回后输出 n! 的当前结果",
+            status: "ready",
+            starterCode: `#include <iostream>
+using namespace std;
+
+long long factorialTrace(int n) {
+    // TODO: 回收时按 n!=answer 输出每层结果
+}
+
+int main() {
+    int n;
+    cin >> n;
+    factorialTrace(n);
+    return 0;
+}`,
+          },
+          {
+            id: "recursion-combination",
+            title: "递归计算组合数",
+            difficulty: "进阶",
+            focus: "用 C(n,k)=C(n-1,k-1)+C(n-1,k) 建立双分支",
+            status: "ready",
+            starterCode: `#include <iostream>
+using namespace std;
+
+long long combination(int n, int k) {
+    // TODO: k=0 或 k=n 时返回 1
+}
+
+int main() {
+    int n, k;
+    cin >> n >> k;
+    cout << combination(n, k);
+    return 0;
+}`,
+          },
+        ],
+      },
+      {
+        id: "recursion-fibonacci-tree",
+        title: "Fibonacci 递归树",
+        summary: "Fibonacci 的递归调用会分裂成一棵树；同一个子问题在不同分支重复出现，既解释了执行顺序，也暴露了朴素递归的低效。",
+        videoUrl: "/videos/recursion_chapter_scenes/1080p60/RecursionFibonacciVisualization.mp4",
+        previewImage: "/previews/recursion_fibonacci_preview.png",
+        duration: "约 23 秒",
+        concepts: ["树形递归", "Fibonacci", "重复计算", "递归树", "调用次数", "记忆化"],
+        steps: [
+          "fib(n) 会同时请求 fib(n-1) 与 fib(n-2) 两个子结果。",
+          "每个非出口节点继续分裂，形成一棵二叉递归树。",
+          "fib(2)、fib(3) 等相同子问题会在不同分支重复出现。",
+          "返回时先得到左右子树结果，再在父节点把它们相加。",
+          "朴素写法适合观察结构，但 n 增大后调用次数增长很快。",
+          "把算过的 fib(k) 保存下来，就得到记忆化递归。",
+        ],
+        code: recursionFibonacciCode,
+        problems: [
+          { id: "recursion-fibonacci-basic", title: "朴素递归 Fibonacci", difficulty: "入门", focus: "写出双分支递归和两个出口", status: "ready", starterCode: recursionFibonacciCode },
+          {
+            id: "recursion-fibonacci-calls",
+            title: "统计递归调用次数",
+            difficulty: "基础",
+            focus: "每进入一次 fib 就把计数增加 1",
+            status: "ready",
+            starterCode: `#include <iostream>
+using namespace std;
+
+long long calls = 0;
+long long fibonacci(int n) {
+    // TODO: 统计包括出口在内的每一次函数调用
+}
+
+int main() {
+    int n;
+    cin >> n;
+    long long value = fibonacci(n);
+    cout << value << '\\n' << calls;
+    return 0;
+}`,
+          },
+          {
+            id: "recursion-fibonacci-memo",
+            title: "记忆化递归 Fibonacci",
+            difficulty: "进阶",
+            focus: "命中已保存结果时直接返回，避免重复展开",
+            status: "ready",
+            starterCode: `#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<long long> memo;
+long long fibonacci(int n) {
+    // TODO: 先查 memo，再递归计算并保存
+}
+
+int main() {
+    int n;
+    cin >> n;
+    memo.assign(n + 1, -1);
+    cout << fibonacci(n);
+    return 0;
+}`,
+          },
+        ],
+      },
+      {
+        id: "recursion-hanoi",
+        title: "汉诺塔",
+        summary: "移动 n 个盘子的任务可以固定拆成三步：移走上面 n-1 个、移动最大盘、再把 n-1 个盘子移到目标柱。",
+        videoUrl: "/videos/recursion_chapter_scenes/1080p60/RecursionHanoiVisualization.mp4",
+        previewImage: "/previews/recursion_hanoi_preview.png",
+        duration: "约 22 秒",
+        concepts: ["汉诺塔", "任务分解", "辅助柱", "递归三步", "移动序列", "2^n-1"],
+        steps: [
+          "目标是把 n 个盘子从起点柱移动到目标柱，且大盘不能压小盘。",
+          "先递归地把上面 n-1 个盘子从起点移到辅助柱。",
+          "空出最大盘后，把它从起点直接移动到目标柱。",
+          "再递归地把 n-1 个盘子从辅助柱移动到目标柱。",
+          "n=0 时没有盘子需要移动，直接返回。",
+          "参数 from、auxiliary、to 会随子任务交换角色。",
+        ],
+        code: recursionHanoiCode,
+        problems: [
+          { id: "recursion-hanoi-moves", title: "输出汉诺塔移动步骤", difficulty: "入门", focus: "按三步分解输出标准移动序列", status: "ready", starterCode: recursionHanoiCode },
+          {
+            id: "recursion-hanoi-count",
+            title: "汉诺塔最少移动次数",
+            difficulty: "基础",
+            focus: "用 T(n)=2T(n-1)+1 计算总次数",
+            status: "ready",
+            starterCode: `#include <iostream>
+using namespace std;
+
+long long moveCount(int n) {
+    // TODO: 没有盘子时为 0，其余为两次子任务加一次最大盘移动
+}
+
+int main() {
+    int n;
+    cin >> n;
+    cout << moveCount(n);
+    return 0;
+}`,
+          },
+          {
+            id: "recursion-hanoi-disk-counts",
+            title: "统计每个盘子的移动次数",
+            difficulty: "进阶",
+            focus: "在移动盘子时按编号累计次数",
+            status: "ready",
+            starterCode: `#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<long long> counts;
+void hanoi(int n) {
+    // TODO: 两次处理 n-1 个盘子，中间记录第 n 个盘子移动一次
+}
+
+int main() {
+    int n;
+    cin >> n;
+    counts.assign(n + 1, 0);
+    hanoi(n);
+    for (int disk = 1; disk <= n; disk++) {
+        if (disk > 1) cout << ' ';
+        cout << counts[disk];
+    }
+    return 0;
+}`,
+          },
+        ],
+      },
+      {
+        id: "recursion-tree-traversal",
+        title: "树形递归输出",
+        summary: "树的左右孩子本身仍是树，递归天然适合遍历；把访问根节点的位置放在两次子调用之前、中间或之后，就得到三种遍历。",
+        videoUrl: "/videos/recursion_chapter_scenes/1080p60/RecursionTreeTraversalVisualization.mp4",
+        previewImage: "/previews/recursion_tree_traversal_preview.png",
+        duration: "约 23 秒",
+        concepts: ["二叉树", "前序遍历", "中序遍历", "后序遍历", "空节点", "访问时机"],
+        steps: [
+          "把当前节点看作根，把左右孩子看作两个更小的同类问题。",
+          "遇到下标越界或值为 0 的空节点时直接返回。",
+          "先访问根，再递归左右孩子，就是前序遍历。",
+          "把访问放在两次递归之间，就是中序遍历。",
+          "先处理左右孩子，最后访问根，就是后序遍历。",
+          "三种写法的递归骨架相同，变化的只是 visit 的位置。",
+        ],
+        code: recursionTreeTraversalCode,
+        problems: [
+          { id: "recursion-tree-preorder", title: "递归前序遍历", difficulty: "入门", focus: "按根、左、右访问数组表示的二叉树", status: "ready", starterCode: recursionTreeTraversalCode },
+          {
+            id: "recursion-tree-inorder",
+            title: "递归中序遍历",
+            difficulty: "基础",
+            focus: "把访问语句放在左右子调用之间",
+            status: "ready",
+            starterCode: `#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<int> tree;
+void inorder(int index) {
+    // TODO: 空节点返回；访问顺序为左、根、右
+}
+
+int main() {
+    int n;
+    cin >> n;
+    tree.resize(n + 1);
+    for (int i = 1; i <= n; i++) cin >> tree[i];
+    inorder(1);
+    return 0;
+}`,
+          },
+          {
+            id: "recursion-tree-postorder",
+            title: "递归后序遍历",
+            difficulty: "进阶",
+            focus: "先完成左右子树，再访问当前根节点",
+            status: "ready",
+            starterCode: `#include <iostream>
+#include <vector>
+using namespace std;
+
+vector<int> tree;
+void postorder(int index) {
+    // TODO: 空节点返回；访问顺序为左、右、根
+}
+
+int main() {
+    int n;
+    cin >> n;
+    tree.resize(n + 1);
+    for (int i = 1; i <= n; i++) cin >> tree[i];
+    postorder(1);
+    return 0;
+}`,
+          },
+        ],
+      },
+      {
+        id: "recursion-debugging",
+        title: "递归调试方法",
+        summary: "为每层调用增加 depth，并在进入和返回时打印参数与结果；缩进轨迹能把看不见的调用栈变成可逐行核对的执行记录。",
+        videoUrl: "/videos/recursion_chapter_scenes/1080p60/RecursionDebugVisualization.mp4",
+        previewImage: "/previews/recursion_debug_preview.png",
+        duration: "约 21 秒",
+        concepts: ["递归调试", "depth", "缩进日志", "进入", "返回", "参数轨迹"],
+        steps: [
+          "给递归函数临时增加 depth 参数，下一层传 depth+1。",
+          "进入函数时打印参数，前面加 depth 个短横线作为缩进。",
+          "在出口也打印返回信息，确认最深层是否正确停止。",
+          "子调用结束后再次打印，观察控制权回到哪一层。",
+          "二分递归可记录 left、right、mid，快速发现区间没有缩小的问题。",
+          "调试完成后移除日志，不让辅助输出污染题目答案。",
+        ],
+        code: recursionDebugCode,
+        problems: [
+          { id: "recursion-depth-trace", title: "输出缩进递归轨迹", difficulty: "入门", focus: "用 depth 对齐进入与返回日志", status: "ready", starterCode: recursionDebugCode },
+          {
+            id: "recursion-binary-search-trace",
+            title: "递归二分查找轨迹",
+            difficulty: "基础",
+            focus: "输出每层 mid，检查搜索区间是否严格缩小",
+            status: "ready",
+            starterCode: `#include <iostream>
+#include <vector>
+using namespace std;
+
+int binarySearch(const vector<int>& a, int left, int right, int target) {
+    // TODO: 每层先输出 mid，再进入包含 target 的更小区间
+}
+
+int main() {
+    int n, target;
+    cin >> n >> target;
+    vector<int> a(n);
+    for (int& x : a) cin >> x;
+    cout << "result=" << binarySearch(a, 0, n - 1, target);
+    return 0;
+}`,
+          },
+          {
+            id: "recursion-euclid-trace",
+            title: "欧几里得参数轨迹",
+            difficulty: "进阶",
+            focus: "逐层输出 a,b 并观察余数如何走向 0",
+            status: "ready",
+            starterCode: `#include <iostream>
+using namespace std;
+
+long long gcdTrace(long long a, long long b, int depth) {
+    // TODO: 输出 depth:a,b；b=0 时返回，否则递归 gcd(b,a%b)
+}
+
+int main() {
+    long long a, b;
+    cin >> a >> b;
+    cout << "gcd=" << gcdTrace(a, b, 0);
+    return 0;
+}`,
+          },
+        ],
+      },
+    ],
   },
   {
     id: "search-backtracking",
     order: 5,
     title: "搜索与回溯",
     subtitle: "在搜索树里选择、尝试、撤销",
-    status: "planned",
+    status: "building",
     icon: GitBranch,
-    lessons: [],
+    lessons: [
+      {
+        id: "search-enumeration-tree",
+        title: "枚举与搜索树",
+        summary: "把“所有可能”按决策次序展开成一棵树：层表示正在决定的位置，边表示一次选择，叶子就是一个完整方案。",
+        duration: "讲义约 8 分钟",
+        concepts: ["系统枚举", "决策层", "搜索树", "叶子方案", "path 数组"],
+        steps: [
+          "先明确每个位置有哪些候选项，不要边写代码边猜分支。",
+          "用 pos 表示当前要决定第几个位置，path 保存从根到当前节点的选择。",
+          "为当前候选项创建分支，进入 pos + 1 这一层。",
+          "当 pos == n 时，所有位置都已决定，当前 path 就是一个叶子方案。",
+          "二进制串的搜索树每层有 0、1 两个分支，深度 n 会产生 2^n 个叶子。",
+        ],
+        code: searchBinaryTreeCode,
+        problems: [
+          {
+            id: "search-binary-strings",
+            title: "枚举所有二进制串",
+            difficulty: "入门",
+            focus: "按 0 分支、1 分支的顺序展开一棵完整搜索树",
+            status: "ready",
+            starterCode: searchBinaryTreeCode,
+          },
+          {
+            id: "search-tree-level-count",
+            title: "计算搜索树各层节点数",
+            difficulty: "基础",
+            focus: "用 DFS 记录每个 depth 被访问的次数",
+            status: "ready",
+            starterCode: `#include <iostream>
+#include <vector>
+using namespace std;
+
+int n;
+vector<long long> levelCount;
+
+void dfs(int depth) {
+    // TODO: 记录当前节点，再进入 0 和 1 两个分支
+}
+
+int main() {
+    cin >> n;
+    levelCount.assign(n + 1, 0);
+    dfs(0);
+    for (int depth = 0; depth <= n; depth++) {
+        if (depth) cout << ' ';
+        cout << levelCount[depth];
+    }
+    return 0;
+}`,
+          },
+        ],
+      },
+      {
+        id: "search-dfs-framework",
+        title: "DFS 基本框架",
+        summary: "深度优先搜索会先把一条路走到底，到达出口后返回最近的岔路口，再继续下一个候选分支。",
+        duration: "讲义约 9 分钟",
+        concepts: ["DFS", "递归出口", "候选循环", "深度优先", "调用栈"],
+        steps: [
+          "一个 DFS 通常有三部分：出口、候选循环、进入下一层。",
+          "出口要放在函数前部；本题 pos == n 时已经得到完整序列。",
+          "for 循环按约定顺序枚举当前层的候选项，它也决定最终输出顺序。",
+          "每次递归都必须让 pos 接近出口，否则会无限递归。",
+          "读代码时可以先画 n=2、m=2 的小树，再对齐每一次调用。",
+        ],
+        code: searchDfsFrameworkCode,
+        problems: [
+          {
+            id: "search-dfs-sequences",
+            title: "DFS 枚举定长序列",
+            difficulty: "入门",
+            focus: "每层从 1 到 m 选一个数，按 DFS 顺序输出所有序列",
+            status: "ready",
+            starterCode: searchDfsFrameworkCode,
+          },
+          {
+            id: "search-dfs-leaf-count",
+            title: "统计 DFS 叶子数",
+            difficulty: "基础",
+            focus: "不保存方案，只在递归出口统计完整方案",
+            status: "ready",
+            starterCode: `#include <iostream>
+using namespace std;
+
+int n, m;
+long long leaves = 0;
+
+void dfs(int pos) {
+    // TODO: pos == n 时累加叶子，否则枚举 m 个分支
+}
+
+int main() {
+    cin >> n >> m;
+    dfs(0);
+    cout << leaves;
+    return 0;
+}`,
+          },
+        ],
+      },
+      {
+        id: "search-choose-recurse-undo",
+        title: "选择、递归、撤销选择",
+        summary: "回溯的核心是让同一份 path 在不同分支之间复用：先加入选择，再递归进入下一层，返回后立即恢复现场。",
+        duration: "讲义约 10 分钟",
+        concepts: ["回溯", "选择", "递归", "撤销", "恢复现场"],
+        steps: [
+          "path.push_back(choice) 把当前选择放入路径，此时才能进入下一层。",
+          "dfs(...) 会完成这个选择之下的整棵子树，返回时说明子树已经搜完。",
+          "path.pop_back() 必须与 push 成对，把 path 恢复到进入这个分支之前的状态。",
+          "若还有 used、sum 或棋盘标记，也要在同一层完成对称的设置与撤销。",
+          "调试回溯时，优先检查每个选择动作是否都有对应的撤销动作。",
+        ],
+        code: searchChooseUndoCode,
+        problems: [
+          {
+            id: "search-fixed-weight-binary",
+            title: "枚举恰有 k 个 1 的二进制串",
+            difficulty: "基础",
+            focus: "维护 path 和 ones，练习两个分支后的恢复现场",
+            status: "ready",
+            starterCode: searchChooseUndoCode,
+          },
+          {
+            id: "search-balanced-parentheses",
+            title: "生成合法括号序列",
+            difficulty: "进阶",
+            focus: "用 left、right 约束可选括号，每次递归后撤销字符",
+            status: "ready",
+            starterCode: `#include <iostream>
+#include <string>
+using namespace std;
+
+int n;
+string path;
+
+void dfs(int left, int right) {
+    // TODO: 只在 left < n 时放 '(' ，只在 right < left 时放 ')'
+}
+
+int main() {
+    cin >> n;
+    dfs(0, 0);
+    return 0;
+}`,
+          },
+        ],
+      },
+      {
+        id: "search-full-permutation",
+        title: "全排列",
+        summary: "全排列要把每个数恰好使用一次：path 管理已填好的位置，used 数组管理哪些候选值暂时不可选。",
+        duration: "讲义约 11 分钟",
+        concepts: ["全排列", "used 数组", "候选过滤", "字典序", "恢复标记"],
+        steps: [
+          "当 path.size() == n 时，每个位置已经填好，输出一个排列。",
+          "当前层枚举 1..n，如果 used[value] 为 true，说明它已经在路径中。",
+          "选择 value 时同时设置 used 并放入 path，两份状态始终保持一致。",
+          "子树搜完后，先移除 path 末尾，再把 used[value] 恢复为 false。",
+          "候选值从小到大枚举，可自然得到字典序的排列。",
+        ],
+        code: searchPermutationCode,
+        problems: [
+          {
+            id: "search-permutation-basic",
+            title: "输出 1 到 n 的全排列",
+            difficulty: "基础",
+            focus: "用 used 数组避免同一个数在一条路径中重复使用",
+            status: "ready",
+            starterCode: searchPermutationCode,
+          },
+          {
+            id: "search-permutation-kth",
+            title: "第 k 个全排列",
+            difficulty: "进阶",
+            focus: "按字典序 DFS，在叶子处计数并停在第 k 个方案",
+            status: "ready",
+            starterCode: `#include <iostream>
+#include <vector>
+using namespace std;
+
+int n;
+long long k, visitedLeaves = 0;
+vector<int> path;
+vector<bool> used;
+bool found = false;
+
+void dfs() {
+    // TODO: 在第 k 个叶子输出 path，并让后续递归提前停止
+}
+
+int main() {
+    cin >> n >> k;
+    used.assign(n + 1, false);
+    dfs();
+    return 0;
+}`,
+          },
+        ],
+      },
+      {
+        id: "search-combination-enumeration",
+        title: "组合枚举",
+        summary: "组合不关心选择顺序。用 start 限制下一层只能向后选，就能避免 1,2 和 2,1 这类重复方案。",
+        duration: "讲义约 10 分钟",
+        concepts: ["组合", "start 起点", "去除顺序重复", "剩余名额", "循环剪枝"],
+        steps: [
+          "start 表示本层最小可选的数，选了 value 后，下一层从 value + 1 开始。",
+          "路径中的数严格递增，因此同一个集合只会被生成一次。",
+          "当 path.size() == k 时立即输出并 return，避免继续选出过长路径。",
+          "need = k - path.size() 表示还缺多少个数。",
+          "若从 value 到 n 连 need 个数都凑不齐，这个候选之后的循环可直接结束。",
+        ],
+        code: searchCombinationCode,
+        problems: [
+          {
+            id: "search-combinations-basic",
+            title: "输出 1 到 n 中的 k 数组合",
+            difficulty: "基础",
+            focus: "用 start 保证路径递增，按字典序输出组合",
+            status: "ready",
+            starterCode: searchCombinationCode,
+          },
+          {
+            id: "search-combination-sum-k",
+            title: "k 数组合求和",
+            difficulty: "进阶",
+            focus: "在组合搜索中维护 chosen 和 sum，统计和等于 target 的方案",
+            status: "ready",
+            starterCode: `#include <iostream>
+using namespace std;
+
+int n, k, target;
+long long answer = 0;
+
+void dfs(int start, int chosen, int sum) {
+    // TODO: 选满 k 个数时检查 sum，否则从 start 继续选
+}
+
+int main() {
+    cin >> n >> k >> target;
+    dfs(1, 0, 0);
+    cout << answer;
+    return 0;
+}`,
+          },
+        ],
+      },
+      {
+        id: "search-subset-enumeration",
+        title: "子集枚举",
+        summary: "对每个元素都做“不选”或“选”两次递归，就会得到一棵深度为 n 的二叉搜索树，所有叶子恰好对应全部子集。",
+        duration: "讲义约 9 分钟",
+        concepts: ["子集", "选或不选", "二叉分支", "空集", "2^n"],
+        steps: [
+          "dfs(value) 表示正在决定元素 value 是否加入子集。",
+          "不选 value 时不改 path，直接进入 dfs(value + 1)。",
+          "选 value 时先 push，进入下一层，再 pop 恢复现场。",
+          "当 value == n + 1 时，每个元素的去留都已确定，包括 path 为空的空集。",
+          "n 个独立的二选一决策会生成 2^n 个子集，数据范围不能过大。",
+        ],
+        code: searchSubsetCode,
+        problems: [
+          {
+            id: "search-subsets-basic",
+            title: "枚举 1 到 n 的所有子集",
+            difficulty: "基础",
+            focus: "先不选后选，并正确输出空集",
+            status: "ready",
+            starterCode: searchSubsetCode,
+          },
+          {
+            id: "search-subset-sum-count",
+            title: "统计子集和等于 target 的方案",
+            difficulty: "进阶",
+            focus: "在选或不选的搜索树中传递当前和",
+            status: "ready",
+            starterCode: `#include <iostream>
+#include <vector>
+using namespace std;
+
+int n, target;
+long long answer = 0;
+vector<int> numbers;
+
+void dfs(int index, int sum) {
+    // TODO: 分别搜索不选 numbers[index] 和选它的分支
+}
+
+int main() {
+    cin >> n >> target;
+    numbers.resize(n);
+    for (int& value : numbers) cin >> value;
+    dfs(0, 0);
+    cout << answer;
+    return 0;
+}`,
+          },
+        ],
+      },
+      {
+        id: "search-maze-dfs",
+        title: "迷宫 DFS",
+        summary: "把 DFS 从抽象搜索树放进网格：方向数组产生候选移动，边界、墙和 visited 标记负责拦住非法分支。",
+        duration: "讲义约 12 分钟",
+        concepts: ["迷宫", "方向数组", "边界判断", "visited", "死路回退"],
+        steps: [
+          "dfs(x, y) 表示已经到达格子 (x, y)，目标是继续寻找终点。",
+          "生成新坐标后，依次检查越界、墙和已访问，任一不满足就 continue。",
+          "在进入相邻格之前标记 visited，避免在两个格子之间来回递归。",
+          "只判断是否存在路径时，全局 visited 无需撤销；统计所有简单路径时则必须撤销。",
+          "起点或终点是墙要先单独处理，否则 DFS 的起始状态就是非法的。",
+        ],
+        code: searchMazeCode,
+        problems: [
+          {
+            id: "search-maze-reachable",
+            title: "迷宫是否可达",
+            difficulty: "基础",
+            focus: "使用四方向 DFS 和 visited 判断左上到右下是否连通",
+            status: "ready",
+            starterCode: searchMazeCode,
+          },
+          {
+            id: "search-maze-path-count",
+            title: "统计迷宫简单路径",
+            difficulty: "进阶",
+            focus: "为当前路径标记 visited，回退时撤销，统计不重复走格子的路径",
+            status: "ready",
+            starterCode: `#include <iostream>
+#include <string>
+#include <vector>
+using namespace std;
+
+int n, m;
+long long answer = 0;
+vector<string> grid;
+vector<vector<bool>> visited;
+int dx[4] = {1, 0, -1, 0};
+int dy[4] = {0, 1, 0, -1};
+
+void dfs(int x, int y) {
+    // TODO: 到达终点时计数；离开当前格子前撤销 visited
+}
+
+int main() {
+    cin >> n >> m;
+    grid.resize(n);
+    for (string& row : grid) cin >> row;
+    visited.assign(n, vector<bool>(m, false));
+    if (grid[0][0] == '.' && grid[n - 1][m - 1] == '.') dfs(0, 0);
+    cout << answer;
+    return 0;
+}`,
+          },
+        ],
+      },
+      {
+        id: "search-pruning",
+        title: "剪枝",
+        summary: "剪枝是在可证明当前分支不可能产生答案时提前返回，一次判断可以跳过整棵子树，但条件必须保证不漏解。",
+        duration: "讲义约 11 分钟",
+        concepts: ["可行性剪枝", "上界", "下界", "后缀和", "不漏解"],
+        steps: [
+          "若所有数都为正数，当前 sum > target 后再选只会更大，可直接 return。",
+          "suffixSum[index] 表示剩余数全选时最多还能增加多少。",
+          "sum + suffixSum[index] < target 时，即使全选也不够，整个分支都可以剪掉。",
+          "剪枝条件要写在叶子判断之前，让不可能的状态尽早停止。",
+          "一旦输入允许负数，sum > target 就不再是安全剪枝，必须重新证明边界。",
+        ],
+        code: searchPruningCode,
+        problems: [
+          {
+            id: "search-pruned-subset-sum",
+            title: "剪枝统计目标子集和",
+            difficulty: "进阶",
+            focus: "用超过 target 和剩余上界两个安全条件剪掉子树",
+            status: "ready",
+            starterCode: searchPruningCode,
+          },
+          {
+            id: "search-knapsack-backtrack",
+            title: "回溯求背包最大价值",
+            difficulty: "进阶",
+            focus: "容量超限时剪枝，用剩余价值上界跳过不可能更优的分支",
+            status: "ready",
+            starterCode: `#include <iostream>
+#include <vector>
+using namespace std;
+
+int n, capacity, best = 0;
+vector<int> weight, value, suffixValue;
+
+void dfs(int index, int totalWeight, int totalValue) {
+    // TODO: 剪掉超容量和价值上界不足的分支，再搜索选或不选
+}
+
+int main() {
+    cin >> n >> capacity;
+    weight.resize(n);
+    value.resize(n);
+    suffixValue.assign(n + 1, 0);
+    for (int i = 0; i < n; i++) cin >> weight[i] >> value[i];
+    for (int i = n - 1; i >= 0; i--) suffixValue[i] = suffixValue[i + 1] + value[i];
+    dfs(0, 0, 0);
+    cout << best;
+    return 0;
+}`,
+          },
+        ],
+      },
+      {
+        id: "search-n-queens",
+        title: "N 皇后简化版",
+        summary: "按行放置皇后，每层只决定当前行的列；三组布尔数组保存列、主对角线和副对角线是否已被占用。",
+        duration: "讲义约 13 分钟",
+        concepts: ["N 皇后", "按行搜索", "列冲突", "对角线下标", "约束剪枝"],
+        steps: [
+          "dfs(row) 表示前 row 行已经合法放好，本层只尝试第 row 行的各列。",
+          "同一列用 columnUsed[col] 判断，不需要再扫描棋盘上方。",
+          "主对角线上 row-col 相同，加 n-1 后映射到非负下标。",
+          "副对角线上 row+col 相同，两类对角线各有 2n-1 条。",
+          "选择一列后同时锁定三组标记，子树结束后再同时解锁。",
+        ],
+        code: searchNQueensCode,
+        problems: [
+          {
+            id: "search-n-queens-count",
+            title: "统计 N 皇后方案数",
+            difficulty: "进阶",
+            focus: "用列与两类对角线标记快速判断当前位置是否安全",
+            status: "ready",
+            starterCode: searchNQueensCode,
+          },
+          {
+            id: "search-n-queens-first",
+            title: "输出第一个 N 皇后方案",
+            difficulty: "进阶",
+            focus: "让 DFS 返回 bool，找到按列字典序的第一个方案后提前停止",
+            status: "ready",
+            starterCode: `#include <iostream>
+#include <vector>
+using namespace std;
+
+int n;
+vector<int> queenColumn;
+vector<bool> columnUsed, diagonalDown, diagonalUp;
+
+bool dfs(int row) {
+    // TODO: 从小到大尝试列，子问题返回 true 时立即向上返回
+    return false;
+}
+
+int main() {
+    cin >> n;
+    queenColumn.assign(n, -1);
+    columnUsed.assign(n, false);
+    diagonalDown.assign(2 * n - 1, false);
+    diagonalUp.assign(2 * n - 1, false);
+    if (!dfs(0)) {
+        cout << "NONE";
+    } else {
+        for (int i = 0; i < n; i++) {
+            if (i) cout << ' ';
+            cout << queenColumn[i] + 1;
+        }
+    }
+    return 0;
+}`,
+          },
+        ],
+      },
+      {
+        id: "search-complexity-intuition",
+        title: "回溯复杂度直觉",
+        summary: "搜索题的关键不是只记 O(b^d)，而是会估算分支数 b、决策深度 d和剪枝后的有效节点，再对照题目数据范围。",
+        duration: "讲义约 9 分钟",
+        concepts: ["分支因子 b", "搜索深度 d", "b^d", "节点数", "预估与溢出"],
+        steps: [
+          "每层最多 b 个候选、共做 d 层决策时，叶子数的上界是 b^d。",
+          "完整搜索树的总节点是 1 + b + b^2 + ... + b^d，通常与最后一层处在同一量级。",
+          "全排列的分支会逐层减少，叶子数是 n!，不能机械地当成 n^n。",
+          "剪枝能减少实际访问节点，但最坏上界仍要用于判断风险。",
+          "计算 b^d 时要在乘法前检查 limit / b，避免先溢出再比较。",
+        ],
+        code: searchComplexityCode,
+        problems: [
+          {
+            id: "search-budget-check",
+            title: "搜索规模是否超预算",
+            difficulty: "基础",
+            focus: "逐次乘以 b，在溢出前判断 b^d 是否超过 limit",
+            status: "ready",
+            starterCode: searchComplexityCode,
+          },
+          {
+            id: "search-full-tree-node-count",
+            title: "计算完整搜索树节点数",
+            difficulty: "基础",
+            focus: "逐层累加 1+b+...+b^d，理解叶子数与总节点的区别",
+            status: "ready",
+            starterCode: `#include <iostream>
+using namespace std;
+
+int main() {
+    long long b, d;
+    cin >> b >> d;
+    long long nodesOnLevel = 1;
+    long long total = 0;
+    // TODO: 累加第 0 层到第 d 层的节点数
+    cout << total;
+    return 0;
+}`,
+          },
+        ],
+      },
+    ],
   },
   {
     id: "greedy",
     order: 6,
     title: "贪心算法",
     subtitle: "理解局部选择何时可靠",
-    status: "planned",
+    status: "ready",
     icon: Compass,
-    lessons: [],
+    lessons: greedyLessons,
   },
   {
     id: "divide-conquer",
     order: 7,
     title: "分治算法",
     subtitle: "把大问题拆成可合并的小问题",
-    status: "planned",
+    status: "ready",
     icon: Layers3,
-    lessons: [],
+    lessons: divideConquerLessons,
   },
   {
     id: "bfs",
     order: 8,
     title: "广度优先搜索",
     subtitle: "队列驱动的一层层扩散",
-    status: "planned",
+    status: "ready",
     icon: Grid3X3,
-    lessons: [],
+    lessons: bfsLessons,
   },
   {
     id: "dynamic-programming",
     order: 9,
     title: "动态规划",
     subtitle: "定义状态，沿依赖关系填表",
-    status: "planned",
+    status: "ready",
     icon: BrainCircuit,
-    lessons: [],
+    lessons: dynamicProgrammingLessons,
   },
 ];
 

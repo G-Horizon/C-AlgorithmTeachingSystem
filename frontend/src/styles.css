@@ -380,6 +380,32 @@ h1 {
   background: #101827;
 }
 
+.video-production-placeholder {
+  display: flex;
+  min-height: 250px;
+  aspect-ratio: 16 / 9;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 10px;
+  padding: 28px;
+  color: #dce8ff;
+  text-align: center;
+  background:
+    radial-gradient(circle at 50% 28%, rgba(56, 189, 248, 0.18), transparent 36%),
+    #101827;
+}
+
+.video-production-placeholder strong {
+  font-size: 18px;
+}
+
+.video-production-placeholder span {
+  max-width: 520px;
+  color: #9fb0ca;
+  line-height: 1.7;
+}
+
 .concept-band {
   display: flex;
   flex-wrap: wrap;

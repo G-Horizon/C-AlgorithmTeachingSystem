@@ -2,8 +2,11 @@
 
 这个项目用于建设面向青少年 C++ 编程能力培养的算法可视化教学系统。当前阶段先从 Manim 算法演示视频开始，逐步接入 React 学习前台和临时 OJ。
 
-目前已有排序章节样板课时，并已完成第一章高精度计算 11 支规划视频的课程、视频和练习入口闭环。
+目前已完成第一章高精度计算 11 支规划视频的课程、视频和练习入口闭环，并把第二章排序扩展为 6 个课时、18 道练习、6 支高清动画的完整样板章节。
 第一章已补充章节总结测验、回刷题包，以及所有高精度练习题的分层提示、题解要点和常见坑，学生可以在课程页和题目页完成复盘闭环。
+第二章也已补充章节总结测验、三组回刷题包，以及全部排序练习的分层提示、题解要点和常见坑。
+第五章搜索与回溯已完成 10 个课时的内容生产，接入 20 道可判题练习、6 题章节测验、全题分层题解与 10 份视频制作脚本；Manim 成片为下一阶段。
+第六章贪心算法与第七章分治算法也已完成内容生产；其中第七章包含 8 个课时、16 道可判题练习、6 题章节测验、全题分层题解与 8 份视频制作脚本。
 
 ## 当前结构
 
@@ -14,6 +17,8 @@ docs/
   新对话接续提示.md
   判题隔离与OJ接入规划.md
   完整Demo冲刺规划.md
+  第五章内容生产说明.md
+  第七章内容生产清单.md
 frontend/
   src/
 backend/
@@ -91,6 +96,7 @@ python -m manim -pqh manim/scenes/recurrence/rolling_variables_scene.py Recurren
 python -m manim -pqh manim/scenes/recurrence/pascal_triangle_scene.py RecurrencePascalTriangleVisualization
 python -m manim -pqh manim/scenes/recurrence/grid_paths_scene.py RecurrenceGridPathsVisualization
 python -m manim -pqh manim/scenes/recurrence/number_tower_scene.py RecurrenceNumberTowerVisualization
+python -m manim -pqh manim/scenes/recurrence/initial_conditions_boundary_scene.py RecurrenceInitialBoundaryVisualization
 ```
 
 如果需要更快预览，可以使用低清版本：
@@ -121,6 +127,7 @@ python -m manim -pql manim/scenes/recurrence/rolling_variables_scene.py Recurren
 python -m manim -pql manim/scenes/recurrence/pascal_triangle_scene.py RecurrencePascalTriangleVisualization
 python -m manim -pql manim/scenes/recurrence/grid_paths_scene.py RecurrenceGridPathsVisualization
 python -m manim -pql manim/scenes/recurrence/number_tower_scene.py RecurrenceNumberTowerVisualization
+python -m manim -pql manim/scenes/recurrence/initial_conditions_boundary_scene.py RecurrenceInitialBoundaryVisualization
 ```
 
 批量后台渲染高清版本：
@@ -267,9 +274,10 @@ npm run dev
 
 - 九章课程导航。
 - 浏览器本地学习进度：总进度、章节进度条、课时完成状态、题目 Accepted 点亮和继续学习入口。
-- 高精度开篇三课“普通整数为什么不够用”“字符串与数组存储大整数”“为什么常用反向存储”、高精度加法、高精度减法、大数比较与符号处理、高精度乘低精度、高精度乘高精度、高精度除低精度、前导零与边界整理、高精度综合：阶乘与 Fibonacci、递推算法“什么是状态”、递推算法“从已知推出未知”、递推算法“一维递推：爬楼梯”、递推算法“简单数列：Fibonacci”、递推算法“滚动变量优化”、递推算法“二维递推：杨辉三角”、递推算法“路径计数：走方格”、递推算法“数塔递推”、冒泡排序、选择排序、插入排序、计数排序、归并排序、快速排序初步课时页。
+- 高精度计算 11 课时、数据排序 6 课时、递推算法 9 课时、递归算法 9 课时、搜索与回溯 10 课时、贪心算法 9 课时，以及分治算法 8 课时。
 - 已有 Manim 视频播放。
-- 高精度开篇三课、加法、减法、比较符号处理、乘低精度、乘高精度、除低精度、前导零与边界整理、高精度综合各 3 道练习入口，递推入门 24 道练习入口，以及冒泡排序、选择排序、插入排序、计数排序、归并排序、快速排序各三道练习入口。
+- 高精度计算、递推算法与递归算法均已形成“每课 3 题”的练习链路；第五章新增 20 道搜索与回溯练习，第七章新增 16 道分治练习。
+- 第一章、第三章、第四章、第五章、第六章与第七章已接入章节总结测验、掌握清单、回刷题包，以及全章练习的分层提示、题解要点和常见坑。
 - Monaco C++ 代码编辑器。
 - 代码草稿本地自动保存。
 - C++ 代码提交页。
@@ -422,6 +430,41 @@ npm run dev
 - 前端已新增递推第八课时，路由为 `/chapters/recurrence/lessons/recurrence-number-tower`。
 - 后端已新增 3 道练习：`recurrence-number-tower-basic`、`recurrence-number-tower-table`、`recurrence-number-tower-min`。
 - 已用本地判题器验证标准解：最大路径和 6/6 Accepted，递推表 4/4 Accepted，最小路径和 5/5 Accepted。
+
+递推算法：初始条件与边界补充：
+
+- 已新增制作文档 `docs/视频脚本/C03-09-初始条件与边界.md`，包含边界错误诊断分镜、逐镜头字幕、代码映射和练习衔接。
+- 已新增 `manim/scenes/recurrence/initial_conditions_boundary_scene.py`，并生成低清视频 `media/videos/initial_conditions_boundary_scene/480p15/RecurrenceInitialBoundaryVisualization.mp4`。
+- 已生成预览图 `media/previews/recurrence_initial_boundary_preview.png`。
+- 前端已新增递推第九课时，路由为 `/chapters/recurrence/lessons/recurrence-initial-conditions-boundary`。
+- 后端已新增 3 道练习：`recurrence-boundary-climb-stairs`、`recurrence-boundary-state-table`、`recurrence-boundary-grid-sentinel`。
+- 已用本地判题器验证标准解：边界版爬楼梯 7/7、递推状态表 5/5、哨兵边界走方格 8/8 Accepted。
+- 第三章已新增 7 题总结测验、6 项掌握清单、3 组回刷题包，并覆盖全章 27 道练习的分层题解。
+
+递归算法第四章补充：
+
+- 已新增 9 份制作文档：`docs/视频脚本/C04-01-函数为什么能调用自己.md` 至 `C04-09-递归调试方法.md`。
+- 已新增 `manim/scenes/recursion/recursion_chapter_scenes.py`，包含 9 个统一视觉语言、各自独立的递归动画场景。
+- 已生成 9 支 1080p60 视频，统一位于 `media/videos/recursion_chapter_scenes/1080p60/`，并生成 9 张课程预览图。
+- 前端第四章状态已切换为 `ready`，新增 9 个课时页、章节总结测验、掌握清单和 3 组回刷题包。
+- 后端已新增 27 道递归练习，覆盖出口、参数、调用栈、阶乘、Fibonacci、汉诺塔、树遍历与递归调试。
+- 已用本地判题器验证 9 个代表性标准解，修正一处回收阶段空格格式后全部 Accepted；完整 demo 一致性检查与前端生产构建均通过。
+
+搜索与回溯第五章补充：
+
+- 前端已新增枚举与搜索树、DFS 基本框架、选择/递归/撤销、全排列、组合、子集、迷宫 DFS、剪枝、N 皇后与回溯复杂度 10 个课时。
+- 后端已新增 20 道可判题练习，代码定义集中在 `backend/app/content/search_problems.py`。
+- 章节页已接入 6 题总结测验、6 项掌握清单和 3 组回刷题包；20 道题均有分层提示、题解要点与常见坑。
+- `docs/视频脚本/C05-01-枚举与搜索树.md` 至 `C05-10-回溯复杂度直觉.md` 已完成逐镜头制作脚本；当前课时页会显示清晰的视频制作中状态，避免空播放器。
+- 20 道标准解已经本地 C++17 判题全部 Accepted，第五章前后端题目 ID 20/20 对齐，Vite 生产构建通过。
+
+分治算法第七章补充：
+
+- 前端已新增分治框架、二分查找、边界二分、归并排序、快速排序、快速幂、逆序对与递归树复杂度 8 个课时。
+- 后端已新增 16 道可判题练习，代码定义集中在 `backend/app/content/divide_conquer_problems.py`。
+- 章节页已接入 6 题总结测验、6 项掌握清单和 3 组回刷题包；16 道题均有分层提示、题解要点与常见坑。
+- `docs/视频脚本/C07-01-分解解决合并.md` 至 `C07-08-递归树复杂度.md` 已完成逐镜头制作脚本，完整映射见 `docs/第七章内容生产清单.md`。
+- 16 道参考代码已经用 C++17 编译并跑过全部 65 个公开与隐藏测试点，前端生产构建通过。
 
 计数排序补充：
 

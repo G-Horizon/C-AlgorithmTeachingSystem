@@ -45,6 +45,7 @@ class QuickSortVisualization(Scene):
 
         title, subtitle = self.show_intro()
         self.play(VGroup(title, subtitle).animate.to_edge(UP, buff=0.22).scale(0.68), run_time=0.8)
+        self.play(FadeOut(subtitle), run_time=0.35)
 
         partition_group = self.show_partition_process()
         self.wait(0.65)

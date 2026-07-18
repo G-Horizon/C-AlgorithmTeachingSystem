@@ -162,7 +162,7 @@ function Invoke-ManimRender {
 }
 
 $renderQueue = @(
-    [pscustomobject]@{ Id = "C02-01"; SceneFile = "manim/scenes/sorting/bubble_sort_scene.py"; SceneClass = "BubbleSortVisualization" },
+    [pscustomobject]@{ Id = "C02-02"; SceneFile = "manim/scenes/sorting/bubble_sort_scene.py"; SceneClass = "BubbleSortVisualization" },
     [pscustomobject]@{ Id = "C02-04"; SceneFile = "manim/scenes/sorting/selection_sort_scene.py"; SceneClass = "SelectionSortVisualization" },
     [pscustomobject]@{ Id = "C02-05"; SceneFile = "manim/scenes/sorting/insertion_sort_scene.py"; SceneClass = "InsertionSortVisualization" },
     [pscustomobject]@{ Id = "C02-06"; SceneFile = "manim/scenes/sorting/counting_sort_scene.py"; SceneClass = "CountingSortVisualization" },
@@ -188,7 +188,17 @@ $renderQueue = @(
     [pscustomobject]@{ Id = "C03-05"; SceneFile = "manim/scenes/recurrence/rolling_variables_scene.py"; SceneClass = "RecurrenceRollingVariablesVisualization" },
     [pscustomobject]@{ Id = "C03-06"; SceneFile = "manim/scenes/recurrence/pascal_triangle_scene.py"; SceneClass = "RecurrencePascalTriangleVisualization" },
     [pscustomobject]@{ Id = "C03-07"; SceneFile = "manim/scenes/recurrence/grid_paths_scene.py"; SceneClass = "RecurrenceGridPathsVisualization" },
-    [pscustomobject]@{ Id = "C03-08"; SceneFile = "manim/scenes/recurrence/number_tower_scene.py"; SceneClass = "RecurrenceNumberTowerVisualization" }
+    [pscustomobject]@{ Id = "C03-08"; SceneFile = "manim/scenes/recurrence/number_tower_scene.py"; SceneClass = "RecurrenceNumberTowerVisualization" },
+
+    [pscustomobject]@{ Id = "C04-01"; SceneFile = "manim/scenes/recursion/recursion_chapter_scenes.py"; SceneClass = "RecursionSelfCallVisualization" },
+    [pscustomobject]@{ Id = "C04-02"; SceneFile = "manim/scenes/recursion/recursion_chapter_scenes.py"; SceneClass = "RecursionBaseCaseVisualization" },
+    [pscustomobject]@{ Id = "C04-03"; SceneFile = "manim/scenes/recursion/recursion_chapter_scenes.py"; SceneClass = "RecursionParameterVisualization" },
+    [pscustomobject]@{ Id = "C04-04"; SceneFile = "manim/scenes/recursion/recursion_chapter_scenes.py"; SceneClass = "RecursionCallStackVisualization" },
+    [pscustomobject]@{ Id = "C04-05"; SceneFile = "manim/scenes/recursion/recursion_chapter_scenes.py"; SceneClass = "RecursionFactorialVisualization" },
+    [pscustomobject]@{ Id = "C04-06"; SceneFile = "manim/scenes/recursion/recursion_chapter_scenes.py"; SceneClass = "RecursionFibonacciVisualization" },
+    [pscustomobject]@{ Id = "C04-07"; SceneFile = "manim/scenes/recursion/recursion_chapter_scenes.py"; SceneClass = "RecursionHanoiVisualization" },
+    [pscustomobject]@{ Id = "C04-08"; SceneFile = "manim/scenes/recursion/recursion_chapter_scenes.py"; SceneClass = "RecursionTreeTraversalVisualization" },
+    [pscustomobject]@{ Id = "C04-09"; SceneFile = "manim/scenes/recursion/recursion_chapter_scenes.py"; SceneClass = "RecursionDebugVisualization" }
 )
 
 $lockPath = Join-Path $LogDir "manim_hd_render.lock"

@@ -48,7 +48,11 @@ Write-Host ""
 Add-CheckResult "Python syntax" ($LASTEXITCODE -eq 0)
 
 $curriculumText = Get-Content -Encoding UTF8 $Curriculum -Raw
-$problemsText = Get-Content -Encoding UTF8 $Problems -Raw
+$curriculumDataText = ((Get-ChildItem (Split-Path $Curriculum) -Filter "*.ts") | ForEach-Object {
+    Get-Content -Encoding UTF8 $_.FullName -Raw
+}) -join "`n"
+$problemFiles = Get-ChildItem (Split-Path $Problems) -Filter "*problems.py"
+$problemsText = ($problemFiles | ForEach-Object { Get-Content -Encoding UTF8 $_.FullName -Raw }) -join "`n"
 
 $towerCount = ([regex]::Matches($curriculumText, 'id: "recurrence-number-tower"')).Count
 $recurrenceStart = $curriculumText.IndexOf('id: "recurrence"')
@@ -57,9 +61,18 @@ $recursionStart = $curriculumText.IndexOf('id: "recursion"')
 $towerInRecurrence = $towerCount -eq 1 -and $recurrenceStart -ge 0 -and $towerIndex -gt $recurrenceStart -and $towerIndex -lt $recursionStart
 Add-CheckResult "Number tower lesson placement" $towerInRecurrence "count=$towerCount"
 
-$problemIdPattern = 'id: "([a-z0-9-]+)",\s*[\r\n]+\s*title: "[^"]+",\s*[\r\n]+\s*difficulty:'
-$frontendProblemIds = @([regex]::Matches($curriculumText, $problemIdPattern) | ForEach-Object { $_.Groups[1].Value } | Sort-Object -Unique)
-$backendProblemIds = @([regex]::Matches($problemsText, 'id="([a-z0-9-]+)"') | ForEach-Object { $_.Groups[1].Value } | Sort-Object -Unique)
+$problemIdPattern = 'id: "([a-z0-9-]+)",\s*title: "[^"]+",\s*difficulty:'
+$frontendProblemIds = @(
+    @([regex]::Matches($curriculumDataText, $problemIdPattern) | ForEach-Object { $_.Groups[1].Value }) +
+    @([regex]::Matches($curriculumDataText, 'problem\(\s*"([a-z0-9-]+)"') | ForEach-Object { $_.Groups[1].Value }) |
+    Sort-Object -Unique
+)
+$backendProblemIds = @(
+    @([regex]::Matches($problemsText, 'id="([a-z0-9-]+)"') | ForEach-Object { $_.Groups[1].Value }) +
+    @([regex]::Matches($problemsText, '(?m)^\s*"([a-z0-9-]+)":\s*[a-z_]*problem\(') | ForEach-Object { $_.Groups[1].Value }) +
+    @([regex]::Matches($problemsText, '(?m)^\s*add\(\s*"([a-z0-9-]+)"') | ForEach-Object { $_.Groups[1].Value }) |
+    Sort-Object -Unique
+)
 $missingBackend = @($frontendProblemIds | Where-Object { $_ -notin $backendProblemIds })
 $missingFrontend = @($backendProblemIds | Where-Object { $_ -notin $frontendProblemIds })
 Add-CheckResult "Problem ids referenced by frontend exist in backend" ($missingBackend.Count -eq 0) "frontend=$($frontendProblemIds.Count) backend=$($backendProblemIds.Count)"

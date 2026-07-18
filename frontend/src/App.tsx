@@ -263,12 +263,20 @@ function LessonPage({ progress, onSetLessonComplete }: LessonPageProps) {
         </div>
 
         <div className="video-panel">
-          <video
-            controls
-            preload="metadata"
-            poster={lesson.previewImage}
-            src={lesson.videoUrl}
-          />
+          {lesson.videoUrl ? (
+            <video
+              controls
+              preload="metadata"
+              poster={lesson.previewImage}
+              src={lesson.videoUrl}
+            />
+          ) : (
+            <div className="video-production-placeholder" role="status">
+              <PlayCircle size={42} />
+              <strong>可视化视频正在制作</strong>
+              <span>本课讲义、C++ 示例和练习已可学习，成片后将在此自动接入。</span>
+            </div>
+          )}
         </div>
 
         <section className="concept-band" aria-label="核心概念">

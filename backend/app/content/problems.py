@@ -24,6 +24,35 @@ class Problem:
     memory_limit_mb: int = 128
 
 
+def recursion_problem(
+    problem_id: str,
+    title: str,
+    difficulty: str,
+    statement: str,
+    input_format: str,
+    output_format: str,
+    cases: list[tuple[str, str]],
+    constraints: str = "按题目给定范围，递归深度不会超过本地栈限制。",
+) -> Problem:
+    """Build a compact, consistently formatted recursion chapter problem."""
+    test_cases = [
+        TestCase(input=input_text, output=output_text, hidden=index > 0)
+        for index, (input_text, output_text) in enumerate(cases)
+    ]
+    return Problem(
+        id=problem_id,
+        title=title,
+        difficulty=difficulty,
+        tags=["递归", "第四章"],
+        statement=statement,
+        input_format=input_format,
+        output_format=output_format,
+        constraints=constraints,
+        samples=[test_cases[0]],
+        tests=test_cases,
+    )
+
+
 PROBLEMS: dict[str, Problem] = {
     "big-integer-type-range": Problem(
         id="big-integer-type-range",
@@ -2083,7 +2112,320 @@ PROBLEMS: dict[str, Problem] = {
         ],
         time_limit_ms=2000,
     ),
+    "recurrence-boundary-climb-stairs": Problem(
+        id="recurrence-boundary-climb-stairs",
+        title="边界版爬楼梯",
+        difficulty="入门",
+        tags=["递推", "初始条件", "循环起点", "边界"],
+        statement=(
+            "一只小青蛙站在第 0 阶，每次可以向上跳 1 阶或 2 阶。"
+            "给定目标台阶 n，请输出它到达第 n 阶的方法数。"
+            "站在第 0 阶本身算 1 种起点方案，因此 n=0 时答案为 1。"
+        ),
+        input_format="一行一个整数 n。",
+        output_format="输出到达第 n 阶的方法数。",
+        constraints="0 <= n <= 90，答案可以用 long long 存储。",
+        samples=[TestCase(input="5\n", output="8\n")],
+        tests=[
+            TestCase(input="5\n", output="8\n"),
+            TestCase(input="0\n", output="1\n", hidden=True),
+            TestCase(input="1\n", output="1\n", hidden=True),
+            TestCase(input="2\n", output="2\n", hidden=True),
+            TestCase(input="10\n", output="89\n", hidden=True),
+            TestCase(input="50\n", output="20365011074\n", hidden=True),
+            TestCase(input="90\n", output="4660046610375530309\n", hidden=True),
+        ],
+        time_limit_ms=2000,
+    ),
+    "recurrence-boundary-state-table": Problem(
+        id="recurrence-boundary-state-table",
+        title="补齐递推状态表",
+        difficulty="基础",
+        tags=["递推", "初始条件", "状态表", "边界"],
+        statement=(
+            "定义数列 f[0]=2、f[1]=3，并且当 i>=2 时，"
+            "f[i]=f[i-1]+f[i-2]。给定 n，请输出从 f[0] 到 f[n] 的完整状态表。"
+        ),
+        input_format="一行一个整数 n。",
+        output_format="输出 n+1 个整数 f[0]、f[1]、...、f[n]，数字之间用一个空格分隔。",
+        constraints="0 <= n <= 40，所有结果都可以用 long long 存储。",
+        samples=[TestCase(input="5\n", output="2 3 5 8 13 21\n")],
+        tests=[
+            TestCase(input="5\n", output="2 3 5 8 13 21\n"),
+            TestCase(input="0\n", output="2\n", hidden=True),
+            TestCase(input="1\n", output="2 3\n", hidden=True),
+            TestCase(input="2\n", output="2 3 5\n", hidden=True),
+            TestCase(input="10\n", output="2 3 5 8 13 21 34 55 89 144 233\n", hidden=True),
+        ],
+        time_limit_ms=2000,
+    ),
+    "recurrence-boundary-grid-sentinel": Problem(
+        id="recurrence-boundary-grid-sentinel",
+        title="哨兵边界走方格",
+        difficulty="进阶",
+        tags=["递推", "二维递推", "哨兵初始化", "边界"],
+        statement=(
+            "在一个 n 行 m 列的方格中，从左上角出发，每次只能向右或向下走一格。"
+            "请输出走到右下角的路径数。尝试设置 dp[0][1]=1，"
+            "再让所有有效格统一从上方和左方累加，不单独编写首行、首列分支。"
+        ),
+        input_format="一行两个整数 n 和 m。",
+        output_format="输出从左上角走到右下角的路径数。",
+        constraints="1 <= n,m <= 20，答案可以用 long long 存储。",
+        samples=[TestCase(input="3 4\n", output="10\n")],
+        tests=[
+            TestCase(input="3 4\n", output="10\n"),
+            TestCase(input="1 1\n", output="1\n", hidden=True),
+            TestCase(input="1 7\n", output="1\n", hidden=True),
+            TestCase(input="8 1\n", output="1\n", hidden=True),
+            TestCase(input="3 3\n", output="6\n", hidden=True),
+            TestCase(input="4 5\n", output="35\n", hidden=True),
+            TestCase(input="10 10\n", output="48620\n", hidden=True),
+            TestCase(input="20 20\n", output="35345263800\n", hidden=True),
+        ],
+        time_limit_ms=2000,
+    ),
+    "recursion-countdown": recursion_problem(
+        "recursion-countdown", "递归倒计时", "入门",
+        "给定正整数 n，请只使用递归按从 n 到 1 的顺序输出所有整数。",
+        "一行一个整数 n。", "一行输出 n 到 1，数字之间用一个空格分隔。",
+        [("4\n", "4 3 2 1\n"), ("1\n", "1\n"), ("7\n", "7 6 5 4 3 2 1\n")],
+        "1 <= n <= 1000。",
+    ),
+    "recursion-sum-to-n": recursion_problem(
+        "recursion-sum-to-n", "递归求 1 到 n 的和", "基础",
+        "定义 sum(n)=n+sum(n-1)，用递归求 1 到 n 的整数和。",
+        "一行一个整数 n。", "输出 1+2+...+n 的值。",
+        [("5\n", "15\n"), ("1\n", "1\n"), ("100\n", "5050\n")],
+        "1 <= n <= 10000，答案可用 long long 存储。",
+    ),
+    "recursion-power-two": recursion_problem(
+        "recursion-power-two", "递归计算 2 的幂", "进阶",
+        "约定 2^0=1，使用 power(n)=2*power(n-1) 递归计算 2^n。",
+        "一行一个整数 n。", "输出 2^n。",
+        [("5\n", "32\n"), ("0\n", "1\n"), ("20\n", "1048576\n")],
+        "0 <= n <= 60。",
+    ),
+    "recursion-print-up": recursion_problem(
+        "recursion-print-up", "从 1 递归输出到 n", "入门",
+        "先递归到出口，再在回收阶段按从 1 到 n 的顺序输出整数。",
+        "一行一个整数 n。", "一行输出 1 到 n，数字之间用一个空格分隔。",
+        [("4\n", "1 2 3 4\n"), ("1\n", "1\n"), ("6\n", "1 2 3 4 5 6\n")],
+        "1 <= n <= 1000。",
+    ),
+    "recursion-digit-sum": recursion_problem(
+        "recursion-digit-sum", "递归求各位数字和", "基础",
+        "给定非负整数 n，用 n%10 取当前个位、n/10 缩小问题，递归求各位数字之和。",
+        "一行一个非负整数 n。", "输出 n 的各位数字之和。",
+        [("12034\n", "10\n"), ("0\n", "0\n"), ("999999\n", "54\n")],
+        "0 <= n <= 10^18。",
+    ),
+    "recursion-gcd": recursion_problem(
+        "recursion-gcd", "欧几里得递归求最大公约数", "进阶",
+        "使用 gcd(a,b)=gcd(b,a%b)，并在 b=0 时返回 a。",
+        "一行两个正整数 a 和 b。", "输出 a 和 b 的最大公约数。",
+        [("48 18\n", "6\n"), ("17 13\n", "1\n"), ("270 192\n", "6\n")],
+        "1 <= a,b <= 10^18。",
+    ),
+    "recursion-print-range": recursion_problem(
+        "recursion-print-range", "递归输出整数区间", "入门",
+        "给定 left 和 right，用 current+1 让参数靠近出口，输出闭区间内全部整数。",
+        "一行两个整数 left 和 right，保证 left<=right。", "一行输出 left 到 right。",
+        [("3 7\n", "3 4 5 6 7\n"), ("-2 2\n", "-2 -1 0 1 2\n"), ("5 5\n", "5\n")],
+        "-1000 <= left <= right <= 1000。",
+    ),
+    "recursion-reverse-string": recursion_problem(
+        "recursion-reverse-string", "递归反转字符串", "基础",
+        "让下标从 0 递归走到字符串末尾，并在回收阶段输出字符，得到反转结果。",
+        "一行一个不含空格的字符串 s。", "输出 s 反转后的字符串。",
+        [("hello\n", "olleh\n"), ("a\n", "a\n"), ("recursion\n", "noisrucer\n")],
+        "1 <= len(s) <= 1000。",
+    ),
+    "recursion-palindrome": recursion_problem(
+        "recursion-palindrome", "递归判断回文串", "进阶",
+        "比较当前区间两端字符；相同则递归检查 left+1 到 right-1，区间长度不超过 1 时成功。",
+        "一行一个不含空格的字符串 s。", "是回文串输出 YES，否则输出 NO。",
+        [("racecar\n", "YES\n"), ("abca\n", "NO\n"), ("a\n", "YES\n"), ("level\n", "YES\n")],
+        "1 <= len(s) <= 2000。",
+    ),
+    "recursion-sum-stack": recursion_problem(
+        "recursion-sum-stack", "调用栈递归求和", "入门",
+        "递归求 1 到 n 的和；每一层要先取得子调用返回值，再与当前 n 相加。",
+        "一行一个整数 n。", "输出 1 到 n 的和。",
+        [("4\n", "10\n"), ("1\n", "1\n"), ("20\n", "210\n")],
+        "1 <= n <= 10000。",
+    ),
+    "recursion-enter-leave": recursion_problem(
+        "recursion-enter-leave", "输出进入与返回顺序", "基础",
+        "调用 visit(n) 时先输出 enter n，递归 visit(n-1)，再输出 leave n；n=1 时不再递归。",
+        "一行一个整数 n。", "每个事件占一行，严格按调用栈执行顺序输出。",
+        [
+            ("3\n", "enter 3\nenter 2\nenter 1\nleave 1\nleave 2\nleave 3\n"),
+            ("1\n", "enter 1\nleave 1\n"),
+            ("2\n", "enter 2\nenter 1\nleave 1\nleave 2\n"),
+        ],
+        "1 <= n <= 1000。",
+    ),
+    "recursion-array-max": recursion_problem(
+        "recursion-array-max", "递归求数组最大值", "进阶",
+        "用递归求从当前下标到数组末尾的最大值，再与当前元素比较。",
+        "第一行 n，第二行 n 个整数。", "输出数组最大值。",
+        [("5\n3 8 2 9 4\n", "9\n"), ("1\n-7\n", "-7\n"), ("4\n-9 -3 -12 -5\n", "-3\n")],
+        "1 <= n <= 10000，每个数绝对值不超过 10^9。",
+    ),
+    "recursion-factorial-basic": recursion_problem(
+        "recursion-factorial-basic", "递归求阶乘", "入门",
+        "使用 factorial(n)=n*factorial(n-1) 计算 n!，约定 0!=1。",
+        "一行一个整数 n。", "输出 n!。",
+        [("5\n", "120\n"), ("0\n", "1\n"), ("12\n", "479001600\n")],
+        "0 <= n <= 20。",
+    ),
+    "recursion-factorial-trace": recursion_problem(
+        "recursion-factorial-trace", "输出阶乘回收过程", "基础",
+        "递归计算 n!，并在每层子调用返回后按 k!=value 输出 k 从 1 到 n 的回收结果。",
+        "一行一个整数 n。", "输出 n 行，第 k 行格式为 k!=k! 的值。",
+        [
+            ("5\n", "1!=1\n2!=2\n3!=6\n4!=24\n5!=120\n"),
+            ("1\n", "1!=1\n"),
+            ("3\n", "1!=1\n2!=2\n3!=6\n"),
+        ],
+        "1 <= n <= 20。",
+    ),
+    "recursion-combination": recursion_problem(
+        "recursion-combination", "递归计算组合数", "进阶",
+        "使用 C(n,k)=C(n-1,k-1)+C(n-1,k)，当 k=0 或 k=n 时返回 1。",
+        "一行两个整数 n 和 k。", "输出组合数 C(n,k)。",
+        [("5 2\n", "10\n"), ("6 3\n", "20\n"), ("10 0\n", "1\n"), ("10 10\n", "1\n")],
+        "0 <= k <= n <= 25。",
+    ),
+    "recursion-fibonacci-basic": recursion_problem(
+        "recursion-fibonacci-basic", "朴素递归 Fibonacci", "入门",
+        "定义 F(0)=0、F(1)=1，使用 F(n)=F(n-1)+F(n-2) 递归求第 n 项。",
+        "一行一个整数 n。", "输出 F(n)。",
+        [("6\n", "8\n"), ("0\n", "0\n"), ("1\n", "1\n"), ("15\n", "610\n")],
+        "0 <= n <= 30。",
+    ),
+    "recursion-fibonacci-calls": recursion_problem(
+        "recursion-fibonacci-calls", "统计递归调用次数", "基础",
+        "运行朴素递归 Fibonacci，并统计函数被调用的总次数，出口调用也要计数。",
+        "一行一个整数 n。", "第一行输出 F(n)，第二行输出总调用次数。",
+        [("5\n", "5\n15\n"), ("0\n", "0\n1\n"), ("6\n", "8\n25\n")],
+        "0 <= n <= 30。",
+    ),
+    "recursion-fibonacci-memo": recursion_problem(
+        "recursion-fibonacci-memo", "记忆化递归 Fibonacci", "进阶",
+        "用递归计算 Fibonacci；每个 F(k) 第一次算出后保存，后续调用直接返回缓存结果。",
+        "一行一个整数 n。", "输出 F(n)。",
+        [("50\n", "12586269025\n"), ("0\n", "0\n"), ("10\n", "55\n"), ("90\n", "2880067194370816120\n")],
+        "0 <= n <= 90。",
+    ),
+    "recursion-hanoi-moves": recursion_problem(
+        "recursion-hanoi-moves", "输出汉诺塔移动步骤", "入门",
+        "把 n 个盘子从 A 柱经 B 柱移动到 C 柱，输出标准递归算法产生的每一步。",
+        "一行一个整数 n。", "每行输出 from->to，表示一次移动。",
+        [
+            ("2\n", "A->B\nA->C\nB->C\n"),
+            ("1\n", "A->C\n"),
+            ("3\n", "A->C\nA->B\nC->B\nA->C\nB->A\nB->C\nA->C\n"),
+        ],
+        "1 <= n <= 10。",
+    ),
+    "recursion-hanoi-count": recursion_problem(
+        "recursion-hanoi-count", "汉诺塔最少移动次数", "基础",
+        "用 T(0)=0、T(n)=2*T(n-1)+1 递归计算移动 n 个盘子的最少次数。",
+        "一行一个整数 n。", "输出最少移动次数。",
+        [("3\n", "7\n"), ("0\n", "0\n"), ("20\n", "1048575\n")],
+        "0 <= n <= 60。",
+    ),
+    "recursion-hanoi-disk-counts": recursion_problem(
+        "recursion-hanoi-disk-counts", "统计每个盘子的移动次数", "进阶",
+        "执行汉诺塔递归。盘子编号从 1 到 n，1 为最小盘；统计完整过程中每个盘子被移动几次。",
+        "一行一个整数 n。", "一行输出盘子 1 到 n 的移动次数。",
+        [("3\n", "4 2 1\n"), ("1\n", "1\n"), ("5\n", "16 8 4 2 1\n")],
+        "1 <= n <= 20。",
+    ),
+    "recursion-tree-preorder": recursion_problem(
+        "recursion-tree-preorder", "递归前序遍历", "入门",
+        "二叉树用 1-based 完全二叉树数组表示，值 0 表示空节点。按根、左、右输出所有非空节点。",
+        "第一行数组长度 n，第二行 n 个整数。", "一行输出前序遍历，数字之间用空格分隔。",
+        [
+            ("7\n1 2 3 4 5 6 7\n", "1 2 4 5 3 6 7\n"),
+            ("1\n8\n", "8\n"),
+            ("7\n1 2 3 0 5 0 7\n", "1 2 5 3 7\n"),
+        ],
+        "1 <= n <= 1023，根节点非空。",
+    ),
+    "recursion-tree-inorder": recursion_problem(
+        "recursion-tree-inorder", "递归中序遍历", "基础",
+        "二叉树用 1-based 完全二叉树数组表示，值 0 表示空节点。按左、根、右输出所有非空节点。",
+        "第一行数组长度 n，第二行 n 个整数。", "一行输出中序遍历。",
+        [
+            ("7\n1 2 3 4 5 6 7\n", "4 2 5 1 6 3 7\n"),
+            ("1\n8\n", "8\n"),
+            ("7\n1 2 3 0 5 0 7\n", "2 5 1 3 7\n"),
+        ],
+        "1 <= n <= 1023，根节点非空。",
+    ),
+    "recursion-tree-postorder": recursion_problem(
+        "recursion-tree-postorder", "递归后序遍历", "进阶",
+        "二叉树用 1-based 完全二叉树数组表示，值 0 表示空节点。按左、右、根输出所有非空节点。",
+        "第一行数组长度 n，第二行 n 个整数。", "一行输出后序遍历。",
+        [
+            ("7\n1 2 3 4 5 6 7\n", "4 5 2 6 7 3 1\n"),
+            ("1\n8\n", "8\n"),
+            ("7\n1 2 3 0 5 0 7\n", "5 2 7 3 1\n"),
+        ],
+        "1 <= n <= 1023，根节点非空。",
+    ),
+    "recursion-depth-trace": recursion_problem(
+        "recursion-depth-trace", "输出缩进递归轨迹", "入门",
+        "调用 trace(n,0)。进入一层输出 depth 个短横线和 enter n；子调用结束后输出同样缩进的 leave n。",
+        "一行一个整数 n。", "按调用栈顺序输出进入与返回轨迹。",
+        [
+            ("2\n", "enter 2\n-enter 1\n-leave 1\nleave 2\n"),
+            ("1\n", "enter 1\nleave 1\n"),
+            ("3\n", "enter 3\n-enter 2\n--enter 1\n--leave 1\n-leave 2\nleave 3\n"),
+        ],
+        "1 <= n <= 100。",
+    ),
+    "recursion-binary-search-trace": recursion_problem(
+        "recursion-binary-search-trace", "递归二分查找轨迹", "基础",
+        "在递增数组中递归二分查找 target。每层先输出当前 mid；结束后输出 result=下标，未找到为 -1。",
+        "第一行 n 和 target，第二行 n 个严格递增整数。", "先逐行输出访问的 mid，最后输出 result=index。",
+        [
+            ("7 6\n1 2 3 4 5 6 7\n", "3\n5\nresult=5\n"),
+            ("7 2\n1 2 3 4 5 6 7\n", "3\n1\nresult=1\n"),
+            ("7 8\n1 2 3 4 5 6 7\n", "3\n5\n6\nresult=-1\n"),
+            ("1 4\n4\n", "0\nresult=0\n"),
+        ],
+        "1 <= n <= 100000。",
+    ),
+    "recursion-euclid-trace": recursion_problem(
+        "recursion-euclid-trace", "欧几里得参数轨迹", "进阶",
+        "递归求 gcd(a,b)。每层先按 depth:a,b 输出参数，b=0 后返回，最后输出 gcd=答案。",
+        "一行两个正整数 a 和 b。", "输出每层参数轨迹和最终答案。",
+        [
+            ("48 18\n", "0:48,18\n1:18,12\n2:12,6\n3:6,0\ngcd=6\n"),
+            ("13 5\n", "0:13,5\n1:5,3\n2:3,2\n3:2,1\n4:1,0\ngcd=1\n"),
+            ("100 25\n", "0:100,25\n1:25,0\ngcd=25\n"),
+        ],
+        "1 <= a,b <= 10^18。",
+    ),
 }
+
+# Keep chapter-sized content modules independent so the core registry remains readable.
+# The API and judge only depend on the shared attribute shape of these frozen dataclasses.
+from .greedy_problems import GREEDY_PROBLEMS
+from .search_problems import SEARCH_PROBLEMS
+from .divide_conquer_problems import DIVIDE_CONQUER_PROBLEMS
+from .dynamic_programming_problems import DP_PROBLEMS
+from .bfs_problems import BFS_PROBLEMS
+
+PROBLEMS.update(GREEDY_PROBLEMS)
+PROBLEMS.update(SEARCH_PROBLEMS)
+PROBLEMS.update(DIVIDE_CONQUER_PROBLEMS)
+PROBLEMS.update(DP_PROBLEMS)
+PROBLEMS.update(BFS_PROBLEMS)
 
 
 def list_problems() -> list[Problem]:
