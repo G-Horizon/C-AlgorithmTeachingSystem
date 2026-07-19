@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import Iterable, Sequence
+from zipfile import ZipFile
 
 from PIL import Image, ImageDraw, ImageFont
 from docx import Document
@@ -11,6 +12,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH, WD_BREAK, WD_LINE_SPACING
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
 from docx.shared import Inches, Pt, RGBColor
+from lxml import etree
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -345,19 +347,64 @@ def add_callout(doc: Document, label: str, text: str, fill: str = GREEN_LIGHT, c
     return p
 
 
-def add_picture(doc: Document, path: Path, width: float, caption: str, alt: str, figure_no: int) -> None:
+def add_picture(
+    doc: Document,
+    path: Path,
+    width: float,
+    caption: str,
+    alt: str,
+    figure_no: int,
+    caption_note_title: str | None = None,
+    caption_note_detail: str | None = None,
+) -> None:
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.space_before = Pt(4)
     p.paragraph_format.space_after = Pt(0)
+    p.paragraph_format.keep_with_next = True
     run = p.add_run()
     run.add_picture(str(path), width=Inches(width))
     for doc_pr in run._element.xpath(".//wp:docPr"):
         doc_pr.set("descr", alt)
         doc_pr.set("title", alt)
     cp = doc.add_paragraph(style="Caption")
+    cp.paragraph_format.keep_together = True
     r = cp.add_run(f"图 {figure_no}  {caption}")
     set_run_font(r, size=9, color=MUTED)
+    if caption_note_title and caption_note_detail:
+        note = doc.add_paragraph()
+        note.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
+        note.paragraph_format.space_before = Pt(0)
+        note.paragraph_format.space_after = Pt(8)
+        note.paragraph_format.line_spacing = 1.12
+        note.paragraph_format.keep_together = True
+        r = note.add_run("图释：")
+        set_run_font(r, size=9, color=DARK_BLUE, bold=True)
+        r = note.add_run(caption_note_title)
+        set_run_font(r, size=9, color=MUTED, bold=True)
+        r = note.add_run(caption_note_detail)
+        set_run_font(r, size=9, color=MUTED)
+
+
+def remove_font_table_entry(docx_path: Path, font_name: str) -> None:
+    """Remove an unused font-table declaration without changing document content."""
+    temporary_path = docx_path.with_name(f".{docx_path.stem}.font-cleanup.docx")
+    with ZipFile(docx_path, "r") as source, ZipFile(temporary_path, "w") as target:
+        for member in source.infolist():
+            data = source.read(member.filename)
+            if member.filename == "word/fontTable.xml":
+                root = etree.fromstring(data)
+                for font_element in list(root):
+                    if font_element.get(qn("w:name")) == font_name:
+                        root.remove(font_element)
+                data = etree.tostring(
+                    root,
+                    xml_declaration=True,
+                    encoding="UTF-8",
+                    standalone=True,
+                )
+            target.writestr(member, data)
+    temporary_path.replace(docx_path)
 
 
 def add_metric_table(doc: Document) -> None:
@@ -566,10 +613,8 @@ def add_preview_strip(doc: Document) -> None:
 
 def build() -> None:
     GENERATED_DIR.mkdir(exist_ok=True)
-    loop_png = GENERATED_DIR / "learning-loop.png"
-    architecture_png = GENERATED_DIR / "system-architecture.png"
-    create_learning_loop_png(loop_png)
-    create_architecture_png(architecture_png)
+    loop_png = ASSET_DIR / "learning-loop-v3.png"
+    architecture_png = ASSET_DIR / "system-architecture-v3.png"
 
     doc = Document()
     configure_document(doc)
@@ -626,7 +671,9 @@ def build() -> None:
     doc.add_heading("二、核心创新：把单点工具连成学习闭环", level=1)
     add_picture(doc, loop_png, 6.5,
                 "动画理解—代码映射—在线练习—即时判题—分层反馈—教师诊断",
-                "算法学习闭环图", 2)
+                "算法学习闭环图", 2,
+                "可视化编程学习闭环框架。",
+                "系统以统一知识映射为核心，将动画理解、代码映射、在线练习、即时判题、分层反馈与教师诊断六个环节贯通。学习者通过程序状态、指针和调用栈等可视化内容理解运行过程，并将动画变化与代码变量及执行步骤同步对应；在线编程与自动判题进一步生成测试结果和错误类型，系统据此提供差异化提示、题解与错题整理。教师端汇总学习数据，识别知识薄弱点并形成教学建议。学习数据持续回流，用于内容迭代和下一轮教学，从而构成“理解—练习—反馈—诊断—改进”的完整闭环。")
     innovations = [
         ("创新 1｜动画不是终点，而是代码理解的入口。", "动画中的数组格、指针、调用栈、状态转移与递归树继续映射到 C++ 变量、循环边界与测试点，减少“动画看懂了，代码仍不会写”的断层。"),
         ("创新 2｜分层反馈替代直接给答案。", "练习先提示思路，再提示关键变量与边界，最后才进入核心实现；同时提供题解要点与常见错误，为青少年提供适度支架。"),
@@ -643,7 +690,9 @@ def build() -> None:
     doc.add_heading("三、系统架构与工程创新", level=1)
     add_picture(doc, architecture_png, 6.5,
                 "学习交互层、课程内容层、服务判题层与数据反馈层协同",
-                "系统四层架构图", 3)
+                "系统四层架构图", 3,
+                "青少年 C++ 算法可视化教学系统总体架构。",
+                "系统由学习交互层、课程内容层、服务与判题层和数据反馈层组成，分别负责前端学习体验、课程资源组织、在线代码评测与运行环境适配，以及学习数据统计与教学反馈。各层通过模块化接口连接，使课程内容、判题服务和平台接入相互解耦并可独立演进；判题结果与统计分析进一步回流至学习交互层，用于优化学习体验和教学策略。")
     doc.add_heading("模块化设计带来的可扩展性", level=2)
     for text in [
         "前端：React + TypeScript + Vite 负责课程导航、进度、视频、讲义、练习与教师看板。",
@@ -795,6 +844,7 @@ def build() -> None:
     doc.core_properties.keywords = "C++, 算法可视化, Manim, 在线判题, 教学数据"
     doc.core_properties.comments = "narrative_proposal preset; CJK body: Microsoft YaHei; Chinese headings: SimSun"
     doc.save(OUTPUT)
+    remove_font_table_entry(OUTPUT, "MS Gothic")
     print(OUTPUT)
 
 

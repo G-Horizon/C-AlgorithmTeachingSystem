@@ -29,7 +29,7 @@
 
 ## 核心创新：同一知识点的全链路一致映射
 
-![从动画理解到教师诊断的学习闭环](docs/assets/readme/learning-loop-v2.svg)
+![从动画理解到教师诊断的学习闭环](docs/assets/readme/learning-loop-v3.png)
 
 ### 1. 从“播放动画”升级为“可交互学习闭环”
 
@@ -70,7 +70,7 @@
 
 ## 系统架构
 
-![系统架构](docs/assets/readme/system-architecture.svg)
+![系统架构](docs/assets/readme/system-architecture-v3.png)
 
 核心工程设计：
 
