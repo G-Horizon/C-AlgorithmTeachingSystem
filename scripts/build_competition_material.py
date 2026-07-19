@@ -14,7 +14,7 @@ from docx.shared import Inches, Pt, RGBColor
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "开题报告附加材料-优化版.docx"
+OUTPUT = ROOT / "开题报告附加材料-优化版-宋体-图1修正版.docx"
 ASSET_DIR = ROOT / "docs" / "assets" / "readme"
 GENERATED_DIR = ROOT / ".codex-docx-assets"
 
@@ -41,6 +41,8 @@ LINE = "D9E2EC"
 LIGHT = "F4F6F9"
 WHITE = "FFFFFF"
 RED = "9B1C1C"
+CJK_BODY_FONT = "Microsoft YaHei"
+CJK_HEADING_FONT = "宋体"
 
 
 def rgb(hex_color: str) -> RGBColor:
@@ -49,7 +51,7 @@ def rgb(hex_color: str) -> RGBColor:
 
 def set_run_font(run, size: float | None = None, color: str = INK, bold: bool | None = None,
                  italic: bool | None = None, ascii_font: str = "Calibri",
-                 east_asia_font: str = "Microsoft YaHei") -> None:
+                 east_asia_font: str = CJK_BODY_FONT) -> None:
     run.font.name = ascii_font
     run._element.get_or_add_rPr().rFonts.set(qn("w:ascii"), ascii_font)
     run._element.get_or_add_rPr().rFonts.set(qn("w:hAnsi"), ascii_font)
@@ -167,7 +169,7 @@ def configure_document(doc: Document) -> None:
     normal.font.name = "Calibri"
     normal._element.rPr.rFonts.set(qn("w:ascii"), "Calibri")
     normal._element.rPr.rFonts.set(qn("w:hAnsi"), "Calibri")
-    normal._element.rPr.rFonts.set(qn("w:eastAsia"), "Microsoft YaHei")
+    normal._element.rPr.rFonts.set(qn("w:eastAsia"), CJK_BODY_FONT)
     normal.font.size = Pt(11)
     normal.font.color.rgb = rgb(INK)
     normal.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
@@ -185,7 +187,8 @@ def configure_document(doc: Document) -> None:
         style.font.name = "Calibri"
         style._element.rPr.rFonts.set(qn("w:ascii"), "Calibri")
         style._element.rPr.rFonts.set(qn("w:hAnsi"), "Calibri")
-        style._element.rPr.rFonts.set(qn("w:eastAsia"), "Microsoft YaHei")
+        style._element.rPr.rFonts.set(qn("w:eastAsia"), CJK_HEADING_FONT)
+        style._element.rPr.rFonts.attrib.pop(qn("w:eastAsiaTheme"), None)
         style.font.size = Pt(size)
         style.font.bold = True
         style.font.color.rgb = rgb(color)
@@ -194,9 +197,17 @@ def configure_document(doc: Document) -> None:
         style.paragraph_format.keep_with_next = True
         style.paragraph_format.keep_together = True
 
+    # Make every Chinese title style explicit so Word cannot resolve the
+    # major-East-Asia theme to MS Gothic on another machine.
+    for name in ["Title", "Subtitle", *[f"Heading {i}" for i in range(1, 10)]]:
+        style = styles[name]
+        r_fonts = style._element.get_or_add_rPr().get_or_add_rFonts()
+        r_fonts.set(qn("w:eastAsia"), CJK_HEADING_FONT)
+        r_fonts.attrib.pop(qn("w:eastAsiaTheme"), None)
+
     caption = styles["Caption"]
     caption.font.name = "Calibri"
-    caption._element.rPr.rFonts.set(qn("w:eastAsia"), "Microsoft YaHei")
+    caption._element.rPr.rFonts.set(qn("w:eastAsia"), CJK_BODY_FONT)
     caption.font.size = Pt(9)
     caption.font.color.rgb = rgb(MUTED)
     caption.paragraph_format.space_before = Pt(4)
@@ -207,7 +218,7 @@ def configure_document(doc: Document) -> None:
     hp = header.paragraphs[0]
     hp.alignment = WD_ALIGN_PARAGRAPH.LEFT
     run = hp.add_run("青少年 C++ 算法可视化教学系统")
-    set_run_font(run, size=9, color=MUTED, bold=True)
+    set_run_font(run, size=9, color=MUTED, bold=True, east_asia_font=CJK_HEADING_FONT)
     run = hp.add_run("  |  开题报告附加材料 · 参赛项目佐证")
     set_run_font(run, size=9, color=MUTED)
     footer = section.footer
@@ -474,10 +485,10 @@ def arrow(draw, start, end, fill="#16835f", width=8):
 
 
 def create_learning_loop_png(path: Path) -> None:
-    img = Image.new("RGB", (1800, 630), "#f8fafc")
+    img = Image.new("RGB", (1800, 620), "#f8fafc")
     d = ImageDraw.Draw(img)
-    center_text(d, (0, 30, 1800, 90), "从“看懂”到“会写”，再回到“精准教”", font(38, True), "#0f172a")
-    center_text(d, (0, 88, 1800, 128), "动画、代码、练习、反馈与教学诊断使用同一知识映射", font(22), "#64748b")
+    center_text(d, (0, 22, 1800, 78), "从“看懂”到“会写”，再回到“精准教”", font(37, True), "#0f172a")
+    center_text(d, (0, 80, 1800, 120), "动画、代码、练习、反馈与教学诊断使用同一知识映射", font(22), "#64748b")
     items = [
         ("① 动画理解", "状态 / 指针 / 调用栈", "#0f172a", "#0f172a", "#ffffff"),
         ("② 代码映射", "变量与步骤同步", "#ffffff", "#16a34a", "#166534"),
@@ -486,18 +497,19 @@ def create_learning_loop_png(path: Path) -> None:
         ("⑤ 分层反馈", "提示 / 题解 / 错题", "#ffffff", "#7c3aed", "#6d28d9"),
         ("⑥ 教师诊断", "薄弱点 / 教学建议", "#16835f", "#16835f", "#ffffff"),
     ]
-    x0, y0, w, h, gap = 55, 205, 245, 150, 45
+    # Four balanced vertical bands: heading, process, feedback, and note.
+    x0, y0, w, h, gap = 55, 145, 245, 160, 45
     for i, (title, sub, fill, outline, text_color) in enumerate(items):
         x = x0 + i * (w + gap)
         rounded_box(d, (x, y0, x + w, y0 + h), fill, outline, width=5)
-        center_text(d, (x, y0 + 20, x + w, y0 + 80), title, font(27, True), text_color)
-        center_text(d, (x, y0 + 78, x + w, y0 + 128), sub, font(20), "#d1fae5" if fill != "#ffffff" else "#52606d")
+        center_text(d, (x, y0 + 20, x + w, y0 + 83), title, font(28, True), text_color)
+        center_text(d, (x, y0 + 88, x + w, y0 + 136), sub, font(20), "#d1fae5" if fill != "#ffffff" else "#52606d")
         if i < len(items) - 1:
             arrow(d, (x + w + 5, y0 + h // 2), (x + w + gap - 5, y0 + h // 2))
-    d.arc((160, 330, 1650, 560), start=5, end=175, fill="#16835f", width=8)
-    d.polygon([(166, 441), (190, 426), (190, 456)], fill="#16835f")
-    center_text(d, (0, 450, 1800, 510), "数据反馈驱动内容迭代与下一次教学", font(27, True), "#16835f")
-    center_text(d, (0, 520, 1800, 580), "区别于只播放动画或只提供题库的单点工具，本项目交付的是完整学习闭环。", font(22), "#52606d")
+    d.arc((160, 280, 1650, 490), start=5, end=175, fill="#16835f", width=8)
+    d.polygon([(166, 394), (190, 379), (190, 409)], fill="#16835f")
+    center_text(d, (0, 395, 1800, 445), "数据反馈驱动内容迭代与下一次教学", font(27, True), "#16835f")
+    center_text(d, (0, 520, 1800, 560), "区别于只播放动画或只提供题库的单点工具，本项目交付的是完整学习闭环。", font(20), "#52606d")
     img.save(path, quality=95)
 
 
@@ -569,22 +581,22 @@ def build() -> None:
     p.paragraph_format.space_after = Pt(6)
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     r = p.add_run("比赛参赛项目 · 开题报告附加材料")
-    set_run_font(r, size=12, color=GREEN, bold=True)
+    set_run_font(r, size=12, color=GREEN, bold=True, east_asia_font=CJK_HEADING_FONT)
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.space_after = Pt(8)
     r = p.add_run("青少年 C++ 算法可视化教学系统")
-    set_run_font(r, size=25, color=NAVY, bold=True)
+    set_run_font(r, size=25, color=NAVY, bold=True, east_asia_font=CJK_HEADING_FONT)
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.space_after = Pt(4)
     r = p.add_run("让抽象算法看得见、写得出、练得会")
-    set_run_font(r, size=15, color=DARK_BLUE, bold=True)
+    set_run_font(r, size=15, color=DARK_BLUE, bold=True, east_asia_font=CJK_HEADING_FONT)
     p = doc.add_paragraph()
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.space_after = Pt(18)
     r = p.add_run("可运行全栈 MVP | 算法动画 × 在线判题 × 学习数据闭环")
-    set_run_font(r, size=10.5, color=MUTED)
+    set_run_font(r, size=10.5, color=MUTED, east_asia_font=CJK_HEADING_FONT)
 
     add_picture(doc, ASSET_DIR / "lesson-page.png", 6.45,
                 "课程页将算法动画、理解路径、C++ 代码与练习入口放在同一学习空间",
@@ -781,7 +793,7 @@ def build() -> None:
     doc.core_properties.title = "青少年 C++ 算法可视化教学系统——开题报告附加材料"
     doc.core_properties.subject = "比赛参赛项目佐证材料"
     doc.core_properties.keywords = "C++, 算法可视化, Manim, 在线判题, 教学数据"
-    doc.core_properties.comments = "narrative_proposal preset; CJK font override: Microsoft YaHei"
+    doc.core_properties.comments = "narrative_proposal preset; CJK body: Microsoft YaHei; Chinese headings: SimSun"
     doc.save(OUTPUT)
     print(OUTPUT)
 
