@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="500" viewBox="0 0 1200 500" role="img" aria-labelledby="title desc">
+  <title id="title">系统架构</title>
+  <desc id="desc">React 学习前台连接课程内容层、FastAPI 服务层、判题适配层与 SQLite 数据层，Manim 负责动画内容生产。</desc>
+  <defs>
+    <linearGradient id="head" x1="0" y1="0" x2="1" y2="0"><stop stop-color="#0f172a"/><stop offset="1" stop-color="#173d35"/></linearGradient>
+    <marker id="arrow2" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#64748b"/></marker>
+  </defs>
+  <rect width="1200" height="500" rx="28" fill="#f8fafc"/>
+  <rect x="36" y="28" width="1128" height="74" rx="18" fill="url(#head)"/>
+  <text x="600" y="60" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="28" font-weight="700" fill="#fff">青少年 C++ 算法可视化教学系统</text>
+  <text x="600" y="87" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="16" fill="#d1fae5">内容生产、学习交互、在线判题、数据反馈四层协同</text>
+  <g font-family="Microsoft YaHei, Noto Sans CJK SC, sans-serif">
+    <g transform="translate(50 140)"><rect width="250" height="250" rx="20" fill="#fff" stroke="#0f766e" stroke-width="3"/><text x="125" y="40" text-anchor="middle" font-size="23" font-weight="700" fill="#0f766e">学习交互层</text><text x="28" y="82" font-size="17" fill="#334155">React + TypeScript + Vite</text><text x="28" y="116" font-size="16" fill="#475569">• 章节 / 课时 / 进度</text><text x="28" y="150" font-size="16" fill="#475569">• 动画、讲义、代码映射</text><text x="28" y="184" font-size="16" fill="#475569">• Monaco C++ 编辑器</text><text x="28" y="218" font-size="16" fill="#475569">• 分层提示与错题复盘</text></g>
+    <g transform="translate(350 140)"><rect width="250" height="250" rx="20" fill="#fff" stroke="#2563eb" stroke-width="3"/><text x="125" y="40" text-anchor="middle" font-size="23" font-weight="700" fill="#1d4ed8">课程内容层</text><text x="28" y="82" font-size="17" fill="#334155">Manim + 课程数据模型</text><text x="28" y="116" font-size="16" fill="#475569">• 统一动画视觉组件</text><text x="28" y="150" font-size="16" fill="#475569">• 9 章 84 课时</text><text x="28" y="184" font-size="16" fill="#475569">• 35 个动画课时</text><text x="28" y="218" font-size="16" fill="#475569">• 201 个唯一题目</text></g>
+    <g transform="translate(650 140)"><rect width="250" height="250" rx="20" fill="#fff" stroke="#d97706" stroke-width="3"/><text x="125" y="40" text-anchor="middle" font-size="23" font-weight="700" fill="#9a6700">服务与判题层</text><text x="28" y="82" font-size="17" fill="#334155">FastAPI + Judge Adapter</text><text x="28" y="116" font-size="16" fill="#475569">• 提交与结果 API</text><text x="28" y="150" font-size="16" fill="#475569">• C++17 测试点判定</text><text x="28" y="184" font-size="16" fill="#475569">• Local / Docker 可切换</text><text x="28" y="218" font-size="16" fill="#475569">• 状态与错误分类</text></g>
+    <g transform="translate(950 140)"><rect width="200" height="250" rx="20" fill="#fff" stroke="#7c3aed" stroke-width="3"/><text x="100" y="40" text-anchor="middle" font-size="23" font-weight="700" fill="#6d28d9">数据反馈层</text><text x="24" y="82" font-size="17" fill="#334155">SQLite + 聚合统计</text><text x="24" y="116" font-size="16" fill="#475569">• 提交记录</text><text x="24" y="150" font-size="16" fill="#475569">• 通过率</text><text x="24" y="184" font-size="16" fill="#475569">• 薄弱题排行</text><text x="24" y="218" font-size="16" fill="#475569">• 教学建议</text></g>
+  </g>
+  <g stroke="#64748b" stroke-width="4" fill="none" marker-end="url(#arrow2)"><path d="M300 265 H340"/><path d="M600 265 H640"/><path d="M900 265 H940"/></g>
+  <rect x="280" y="425" width="640" height="45" rx="22" fill="#ecfdf5" stroke="#16835f" stroke-width="2"/>
+  <text x="600" y="454" text-anchor="middle" font-family="Microsoft YaHei, sans-serif" font-size="17" font-weight="700" fill="#166534">模块化接口使内容生产、判题隔离与后续平台接入可独立演进</text>
+</svg>
