@@ -14,7 +14,7 @@ from docx.shared import Inches, Pt, RGBColor
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUTPUT = ROOT / "开题报告附加材料-优化版-宋体-图1修正版.docx"
+OUTPUT = ROOT / "开题报告附加材料release.docx"
 ASSET_DIR = ROOT / "docs" / "assets" / "readme"
 GENERATED_DIR = ROOT / ".codex-docx-assets"
 
